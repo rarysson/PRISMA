@@ -1,0 +1,17 @@
+{
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.trimAutoWhitespace": true,
+	"files.insertFinalNewline": true,
+
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true,
+		"source.fixAll.stylelint": true
+	},
+
+	"eslint.validate": ["javascript", "javascriptreact", "typescript", "vue"],
+
+	"vetur.format.enable": false,
+	"vetur.validation.template": false,
+	"vetur.experimental.templateInterpolationService": true
+}
