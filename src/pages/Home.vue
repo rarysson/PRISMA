@@ -1,11 +1,17 @@
 <template>
   <div>
-    <h1>Petri Net</h1>
+    <joint-paper />
   </div>
 </template>
 
 <script>
+import JointPaper from "@/components/JointPaper";
+
 export default {
-  name: "Home"
+  name: "Home",
+
+  components: {
+    JointPaper
+  }
 };
 </script>
