@@ -1,6 +1,6 @@
 <template>
   <div class="paper-container">
-    <div id="joint-paper">
+    <div id="joint-paper" ref="paper">
       <slot />
     </div>
   </div>
@@ -8,7 +8,6 @@
 
 <script>
 const graph = new window.joint.dia.Graph();
-// eslint-disable-next-line no-unused-vars
 let paper;
 
 export default {
@@ -27,6 +26,10 @@ export default {
       multiLinks: false
     });
 
+    paper.on("blank:pointerclick", (event, x, y) => {
+      this.$emit("click", { x, y });
+    });
+
     this.$emit("mounted", graph);
   }
 };
@@ -34,8 +37,9 @@ export default {
 
 <style scoped>
 .paper-container {
-  width: 100%;
-  height: 100vh;
+  width: 100vw;
+  min-width: 800px;
+  min-height: 600px;
   display: grid;
   place-items: center;
 }
