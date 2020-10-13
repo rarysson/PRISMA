@@ -1,6 +1,8 @@
 <template>
   <div class="paper-container">
-    <div id="joint-paper"></div>
+    <div id="joint-paper">
+      <slot />
+    </div>
   </div>
 </template>
 
@@ -24,6 +26,8 @@ export default {
       linkPinning: false,
       multiLinks: false
     });
+
+    this.$emit("mounted", graph);
   }
 };
 </script>
