@@ -34,7 +34,7 @@
     <joint-paper
       @mounted="set_graph"
       @blank-click="set_object"
-      @element-click="set_arc"
+      @element-click="handle_element_click"
     >
       <div v-if="graph !== null" hidden>
         <joint-place
@@ -42,6 +42,7 @@
           :key="`P${index}`"
           :graph="graph"
           :attrs="place"
+          @mounted="place.id = $event"
         />
         <joint-transition
           v-for="(transition, index) in transitions"
@@ -114,7 +115,8 @@ export default {
       if (this.states.setting_place) {
         this.places.push({
           name: `Place ${this.place_id++}`,
-          position: { x, y }
+          position: { x, y },
+          tokens: 0
         });
       } else if (this.states.setting_transition) {
         this.transitions.push({
@@ -124,7 +126,7 @@ export default {
       }
     },
 
-    set_arc({ id, type }) {
+    handle_element_click({ id, type }) {
       if (this.states.setting_arc) {
         this.tmp_arc.push({ id, type });
 
@@ -144,6 +146,9 @@ export default {
 
           this.tmp_arc = [];
         }
+      } else if (this.states.setting_token) {
+        const place = this.places.find((place) => place.id === id);
+        place.tokens++;
       }
     }
   }

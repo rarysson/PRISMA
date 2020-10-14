@@ -6,6 +6,11 @@
 const petri_net = window.joint.shapes.pn;
 let place;
 
+function get_valid_tokens(tokens) {
+  const t = tokens || 0;
+  return t >= 0 ? t : 0;
+}
+
 export default {
   name: "JointPlace",
 
@@ -37,10 +42,23 @@ export default {
           fill: "#7a7e9b"
         }
       },
-      tokens: 0
+      tokens: get_valid_tokens(this.attrs.tokens)
     });
 
     this.graph.addCell(place);
+
+    this.$emit("mounted", place.id);
+  },
+
+  watch: {
+    attrs: {
+      deep: true,
+      handler(new_val) {
+        if (new_val.tokens >= 0) {
+          place.set("tokens", new_val.tokens);
+        }
+      }
+    }
   }
 };
 </script>
