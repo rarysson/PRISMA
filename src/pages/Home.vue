@@ -1,19 +1,32 @@
 <template>
   <div class="page-container">
     <div class="menu" style="text-align: center; padding-top: 20px;">
-      <button style="padding: 15px;" @click="setting_place = !setting_place">
+      <button
+        :class="{ active: states.setting_place }"
+        style="padding: 15px;"
+        @click="toggle_state('place')"
+      >
         LUGAR
       </button>
       <button
+        :class="{ active: states.setting_transition }"
         style="padding: 15px;"
-        @click="setting_transition = !setting_transition"
+        @click="toggle_state('transition')"
       >
         TRANSIÇÃO
       </button>
-      <button style="padding: 15px;" @click="setting_arc = !setting_arc">
+      <button
+        :class="{ active: states.setting_arc }"
+        style="padding: 15px;"
+        @click="toggle_state('arc')"
+      >
         ARCO
       </button>
-      <button style="padding: 15px;">
+      <button
+        :class="{ active: states.setting_token }"
+        style="padding: 15px;"
+        @click="toggle_state('token')"
+      >
         FICHA
       </button>
     </div>
@@ -69,13 +82,16 @@ export default {
       graph: null,
       places: [],
       place_id: 0,
-      setting_place: false,
       transitions: [],
       transition_id: 0,
-      setting_transition: false,
       arcs: [],
       tmp_arc: [],
-      setting_arc: false
+      states: {
+        setting_place: false,
+        setting_transition: false,
+        setting_arc: false,
+        setting_token: false
+      }
     };
   },
 
@@ -84,13 +100,23 @@ export default {
       this.graph = graph;
     },
 
+    toggle_state(state) {
+      for (const key in this.states) {
+        if (key.includes(state)) {
+          this.states[key] = !this.states[key];
+        } else {
+          this.states[key] = false;
+        }
+      }
+    },
+
     set_object({ x, y }) {
-      if (this.setting_place) {
+      if (this.states.setting_place) {
         this.places.push({
           name: `Place ${this.place_id++}`,
           position: { x, y }
         });
-      } else if (this.setting_transition) {
+      } else if (this.states.setting_transition) {
         this.transitions.push({
           name: `Transition ${this.transition_id++}`,
           position: { x, y }
@@ -98,12 +124,17 @@ export default {
       }
     },
 
-    set_arc(element_id) {
-      if (this.setting_arc) {
-        this.tmp_arc.push(element_id);
+    set_arc({ id, type }) {
+      if (this.states.setting_arc) {
+        this.tmp_arc.push({ id, type });
 
         if (this.tmp_arc.length === 2) {
-          this.arcs.push({ source: this.tmp_arc[0], target: this.tmp_arc[1] });
+          const source = this.tmp_arc[0];
+          const target = this.tmp_arc[1];
+
+          if (source.type !== target.type) {
+            this.arcs.push({ source: source.id, target: target.id });
+          }
 
           this.tmp_arc = [];
         }
@@ -112,3 +143,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.active {
+  border: 2px solid black;
+}
+</style>

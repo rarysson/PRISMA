@@ -31,7 +31,12 @@ export default {
     });
 
     paper.on("element:pointerclick", (element) => {
-      this.$emit("element-click", element.model.id);
+      const id = element.model.id;
+      const type = element.model.attributes.type
+        .replace("pn.", "")
+        .toLowerCase();
+
+      this.$emit("element-click", { id, type });
     });
 
     this.$emit("mounted", graph);
