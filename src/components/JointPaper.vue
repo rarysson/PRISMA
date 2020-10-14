@@ -44,6 +44,10 @@ export default {
       this.$emit("element-click", { id, type });
     });
 
+    this.paper.on("link:pointerclick", (element) => {
+      this.$emit("link-click", element.model.id);
+    });
+
     this.$emit("mounted", graph);
   }
 };

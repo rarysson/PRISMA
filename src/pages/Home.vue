@@ -59,6 +59,7 @@
       @mounted="set_graph"
       @blank-click="set_object"
       @element-click="handle_element_click"
+      @link-click="handle_link_click"
     >
       <div v-if="graph !== null" hidden>
         <joint-place
@@ -77,10 +78,11 @@
         />
         <joint-arc
           v-for="arc in arcs"
-          :key="arc.id"
+          :key="arc.link_id"
           :graph="graph"
           :source="arc.source"
           :target="arc.target"
+          @mounted="arc.id = $event"
         />
       </div>
     </joint-paper>
@@ -170,7 +172,7 @@ export default {
 
             if (!has_arc) {
               this.arcs.push({
-                id: source.id + target.id,
+                link_id: source.id + target.id,
                 source: source.id,
                 target: target.id
               });
@@ -181,6 +183,7 @@ export default {
         }
       } else if (this.states.setting_token) {
         const place = this.places.find((place) => place.id === id);
+
         place.tokens++;
       } else if (this.states.removing_token) {
         const place = this.places.find((place) => place.id === id);
@@ -190,6 +193,7 @@ export default {
         }
       } else if (this.states.removing_place && type === "place") {
         const index = this.places.findIndex((place) => place.id === id);
+
         this.arcs = this.arcs.filter(
           (arc) => arc.source !== id && arc.target !== id
         );
@@ -198,10 +202,19 @@ export default {
         const index = this.transitions.findIndex(
           (transition) => transition.id === id
         );
+
         this.arcs = this.arcs.filter(
           (arc) => arc.source !== id && arc.target !== id
         );
         this.transitions.splice(index, 1);
+      }
+    },
+
+    handle_link_click(id) {
+      if (this.states.removing_arc) {
+        const index = this.arcs.findIndex((arc) => arc.id === id);
+
+        this.arcs.splice(index, 1);
       }
     }
   }

@@ -60,6 +60,11 @@ export default {
     });
 
     this.graph.addCell(this.arc);
+    this.$emit("mounted", this.arc.id);
+  },
+
+  beforeDestroy() {
+    this.arc.remove();
   }
 };
 </script>
