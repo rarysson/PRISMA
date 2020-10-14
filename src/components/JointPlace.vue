@@ -4,7 +4,6 @@
 
 <script>
 const petri_net = window.joint.shapes.pn;
-let place;
 
 function get_valid_tokens(tokens) {
   const t = tokens || 0;
@@ -26,8 +25,14 @@ export default {
     }
   },
 
+  data() {
+    return {
+      place: null
+    };
+  },
+
   mounted() {
-    place = new petri_net.Place({
+    this.place = new petri_net.Place({
       position: { x: this.attrs.position.x, y: this.attrs.position.y },
       attrs: {
         ".label": {
@@ -45,9 +50,9 @@ export default {
       tokens: get_valid_tokens(this.attrs.tokens)
     });
 
-    this.graph.addCell(place);
+    this.graph.addCell(this.place);
 
-    this.$emit("mounted", place.id);
+    this.$emit("mounted", this.place.id);
   },
 
   watch: {
@@ -55,7 +60,7 @@ export default {
       deep: true,
       handler(new_val) {
         if (new_val.tokens >= 0) {
-          place.set("tokens", new_val.tokens);
+          this.place.set("tokens", new_val.tokens);
         }
       }
     }

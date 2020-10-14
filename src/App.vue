@@ -16,7 +16,6 @@ export default {
 #app {
   position: relative;
   z-index: 0;
-  min-width: 100vw;
   min-height: 100vh;
   background-color: whitesmoke;
 }

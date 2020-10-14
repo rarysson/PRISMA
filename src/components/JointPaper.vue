@@ -8,13 +8,18 @@
 
 <script>
 const graph = new window.joint.dia.Graph();
-let paper;
 
 export default {
   name: "JointPaper",
 
+  data() {
+    return {
+      paper: null
+    };
+  },
+
   mounted() {
-    paper = new window.joint.dia.Paper({
+    this.paper = new window.joint.dia.Paper({
       el: document.getElementById("joint-paper"),
       model: graph,
       width: 800,
@@ -26,11 +31,11 @@ export default {
       multiLinks: false
     });
 
-    paper.on("blank:pointerclick", (event, x, y) => {
+    this.paper.on("blank:pointerclick", (event, x, y) => {
       this.$emit("blank-click", { x, y });
     });
 
-    paper.on("element:pointerclick", (element) => {
+    this.paper.on("element:pointerclick", (element) => {
       const id = element.model.id;
       const type = element.model.attributes.type
         .replace("pn.", "")
@@ -46,7 +51,6 @@ export default {
 
 <style scoped>
 .paper-container {
-  width: 100vw;
   min-width: 800px;
   min-height: 600px;
   display: grid;

@@ -4,7 +4,6 @@
 
 <script>
 const petri_net = window.joint.shapes.pn;
-let arc;
 
 export default {
   name: "JointArc",
@@ -34,8 +33,14 @@ export default {
     }
   },
 
+  data() {
+    return {
+      arc: null
+    };
+  },
+
   mounted() {
-    arc = new petri_net.Link({
+    this.arc = new petri_net.Link({
       source: { id: this.source, selector: ".root" },
       target: { id: this.target, selector: ".root" },
       attrs: {
@@ -54,7 +59,7 @@ export default {
       }
     });
 
-    this.graph.addCell(arc);
+    this.graph.addCell(this.arc);
   }
 };
 </script>

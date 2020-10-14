@@ -4,7 +4,6 @@
 
 <script>
 const petri_net = window.joint.shapes.pn;
-let transition;
 
 export default {
   name: "JointTransition",
@@ -21,8 +20,14 @@ export default {
     }
   },
 
+  data() {
+    return {
+      transition: null
+    };
+  },
+
   mounted() {
-    transition = new petri_net.Transition({
+    this.transition = new petri_net.Transition({
       position: { x: this.attrs.position.x, y: this.attrs.position.y },
       attrs: {
         ".label": {
@@ -37,7 +42,7 @@ export default {
       }
     });
 
-    this.graph.addCell(transition);
+    this.graph.addCell(this.transition);
   }
 };
 </script>
