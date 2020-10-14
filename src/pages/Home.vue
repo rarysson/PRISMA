@@ -1,35 +1,59 @@
 <template>
   <div class="page-container">
-    <div class="menu" style="text-align: center; padding-top: 20px;">
+    <fieldset class="menu">
+      <legend>INSERIR</legend>
       <button
         :class="{ active: states.setting_place }"
-        style="padding: 15px;"
-        @click="toggle_state('place')"
+        @click="toggle_state('setting_place')"
       >
         LUGAR
       </button>
       <button
         :class="{ active: states.setting_transition }"
-        style="padding: 15px;"
-        @click="toggle_state('transition')"
+        @click="toggle_state('setting_transition')"
       >
         TRANSIÇÃO
       </button>
       <button
         :class="{ active: states.setting_arc }"
-        style="padding: 15px;"
-        @click="toggle_state('arc')"
+        @click="toggle_state('setting_arc')"
       >
         ARCO
       </button>
       <button
         :class="{ active: states.setting_token }"
-        style="padding: 15px;"
-        @click="toggle_state('token')"
+        @click="toggle_state('setting_token')"
       >
         FICHA
       </button>
-    </div>
+    </fieldset>
+    <fieldset class="menu">
+      <legend>REMOVER</legend>
+      <button
+        :class="{ active: states.removing_place }"
+        @click="toggle_state('removing_place')"
+      >
+        LUGAR
+      </button>
+      <button
+        :class="{ active: states.removing_transition }"
+        @click="toggle_state('removing_transition')"
+      >
+        TRANSIÇÃO
+      </button>
+      <button
+        :class="{ active: states.removing_arc }"
+        @click="toggle_state('removing_arc')"
+      >
+        ARCO
+      </button>
+      <button
+        :class="{ active: states.removing_token }"
+        @click="toggle_state('removing_token')"
+      >
+        FICHA
+      </button>
+    </fieldset>
 
     <joint-paper
       @mounted="set_graph"
@@ -91,7 +115,11 @@ export default {
         setting_place: false,
         setting_transition: false,
         setting_arc: false,
-        setting_token: false
+        setting_token: false,
+        removing_place: false,
+        removing_transition: false,
+        removing_arc: false,
+        removing_token: false
       }
     };
   },
@@ -103,7 +131,7 @@ export default {
 
     toggle_state(state) {
       for (const key in this.states) {
-        if (key.includes(state)) {
+        if (key === state) {
           this.states[key] = !this.states[key];
         } else {
           this.states[key] = false;
@@ -149,6 +177,12 @@ export default {
       } else if (this.states.setting_token) {
         const place = this.places.find((place) => place.id === id);
         place.tokens++;
+      } else if (this.states.removing_token) {
+        const place = this.places.find((place) => place.id === id);
+
+        if (place.tokens > 0) {
+          place.tokens--;
+        }
       }
     }
   }
@@ -158,5 +192,16 @@ export default {
 <style scoped>
 .active {
   border: 2px solid black;
+}
+
+.menu {
+  text-align: center;
+  padding-top: 20px;
+  width: 50%;
+  display: inline-block;
+}
+
+button {
+  padding: 15px;
 }
 </style>
