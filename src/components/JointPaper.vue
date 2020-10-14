@@ -1,6 +1,6 @@
 <template>
   <div class="paper-container">
-    <div id="joint-paper" ref="paper">
+    <div id="joint-paper">
       <slot />
     </div>
   </div>
@@ -20,14 +20,18 @@ export default {
       width: 800,
       height: 400,
       gridSize: 5,
-      defaultAnchor: { name: "perpendicular" },
+      defaultAnchor: { name: "center" },
       defaultConnectionPoint: { name: "boundary" },
       linkPinning: false,
       multiLinks: false
     });
 
     paper.on("blank:pointerclick", (event, x, y) => {
-      this.$emit("click", { x, y });
+      this.$emit("blank-click", { x, y });
+    });
+
+    paper.on("element:pointerclick", (element) => {
+      this.$emit("element-click", element.model.id);
     });
 
     this.$emit("mounted", graph);
