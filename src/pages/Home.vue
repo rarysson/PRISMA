@@ -133,7 +133,13 @@ export default {
           const target = this.tmp_arc[1];
 
           if (source.type !== target.type) {
-            this.arcs.push({ source: source.id, target: target.id });
+            const has_arc = this.arcs.some(
+              (arc) => arc.source === source.id && arc.target === target.id
+            );
+
+            if (!has_arc) {
+              this.arcs.push({ source: source.id, target: target.id });
+            }
           }
 
           this.tmp_arc = [];
