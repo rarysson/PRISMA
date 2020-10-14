@@ -62,21 +62,22 @@
     >
       <div v-if="graph !== null" hidden>
         <joint-place
-          v-for="(place, index) in places"
-          :key="`P${index}`"
+          v-for="place in places"
+          :key="place.name"
           :graph="graph"
           :attrs="place"
           @mounted="place.id = $event"
         />
         <joint-transition
-          v-for="(transition, index) in transitions"
-          :key="`T${index}`"
+          v-for="transition in transitions"
+          :key="transition.name"
           :graph="graph"
           :attrs="transition"
+          @mounted="transition.id = $event"
         />
         <joint-arc
-          v-for="(arc, index) in arcs"
-          :key="`A${index}`"
+          v-for="arc in arcs"
+          :key="arc.id"
           :graph="graph"
           :source="arc.source"
           :target="arc.target"
@@ -168,7 +169,11 @@ export default {
             );
 
             if (!has_arc) {
-              this.arcs.push({ source: source.id, target: target.id });
+              this.arcs.push({
+                id: source.id + target.id,
+                source: source.id,
+                target: target.id
+              });
             }
           }
 
@@ -183,6 +188,20 @@ export default {
         if (place.tokens > 0) {
           place.tokens--;
         }
+      } else if (this.states.removing_place && type === "place") {
+        const index = this.places.findIndex((place) => place.id === id);
+        this.arcs = this.arcs.filter(
+          (arc) => arc.source !== id && arc.target !== id
+        );
+        this.places.splice(index, 1);
+      } else if (this.states.removing_transition && type === "transition") {
+        const index = this.transitions.findIndex(
+          (transition) => transition.id === id
+        );
+        this.arcs = this.arcs.filter(
+          (arc) => arc.source !== id && arc.target !== id
+        );
+        this.transitions.splice(index, 1);
       }
     }
   }

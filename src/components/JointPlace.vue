@@ -51,8 +51,11 @@ export default {
     });
 
     this.graph.addCell(this.place);
-
     this.$emit("mounted", this.place.id);
+  },
+
+  beforeDestroy() {
+    this.place.remove();
   },
 
   watch: {

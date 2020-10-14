@@ -43,6 +43,11 @@ export default {
     });
 
     this.graph.addCell(this.transition);
+    this.$emit("mounted", this.transition.id);
+  },
+
+  beforeDestroy() {
+    this.transition.remove();
   }
 };
 </script>
