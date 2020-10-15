@@ -48,6 +48,15 @@ export default {
 
   beforeDestroy() {
     this.transition.remove();
+  },
+
+  watch: {
+    attrs: {
+      deep: true,
+      handler(new_val) {
+        this.transition.attr(".label/text", new_val.name);
+      }
+    }
   }
 };
 </script>

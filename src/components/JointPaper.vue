@@ -1,8 +1,9 @@
 <template>
   <div class="paper-container">
-    <div id="joint-paper">
+    <div id="joint-paper" ref="paper">
       <slot />
     </div>
+    <slot name="overlay-elements" />
   </div>
 </template>
 
@@ -28,7 +29,13 @@ export default {
       defaultAnchor: { name: "center" },
       defaultConnectionPoint: { name: "boundary" },
       linkPinning: false,
-      multiLinks: false
+      multiLinks: false,
+      allowLink(link) {
+        const source_type = link.sourceView.model.attributes.type;
+        const target_type = link.targetView.model.attributes.type;
+
+        return source_type !== target_type;
+      }
     });
 
     this.paper.on("blank:pointerclick", (event, x, y) => {
@@ -44,6 +51,18 @@ export default {
       this.$emit("element-click", { id, type });
     });
 
+    this.paper.on("element:contextmenu", (element, event, x, y) => {
+      const id = element.model.id;
+      const type = element.model.attributes.type
+        .replace("pn.", "")
+        .toLowerCase();
+
+      x += this.$refs.paper.offsetLeft;
+      y += this.$refs.paper.offsetTop;
+
+      this.$emit("element-contextmenu", { id, type, position: { x, y } });
+    });
+
     this.paper.on("link:pointerclick", (element) => {
       this.$emit("link-click", element.model.id);
     });
@@ -55,6 +74,7 @@ export default {
 
 <style scoped>
 .paper-container {
+  position: relative;
   min-width: 800px;
   min-height: 600px;
   display: grid;

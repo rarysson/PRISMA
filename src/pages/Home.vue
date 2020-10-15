@@ -60,18 +60,19 @@
       @blank-click="set_object"
       @element-click="handle_element_click"
       @link-click="handle_link_click"
+      @element-contextmenu="handle_element_contextmenu"
     >
       <div v-if="graph !== null" hidden>
         <joint-place
           v-for="place in places"
-          :key="place.name"
+          :key="place.key"
           :graph="graph"
           :attrs="place"
           @mounted="place.id = $event"
         />
         <joint-transition
           v-for="transition in transitions"
-          :key="transition.name"
+          :key="transition.key"
           :graph="graph"
           :attrs="transition"
           @mounted="transition.id = $event"
@@ -85,6 +86,35 @@
           @mounted="arc.id = $event"
         />
       </div>
+      <template #overlay-elements>
+        <form
+          v-if="tmp_element !== null"
+          :style="{
+            position: 'absolute',
+            top: `${y}px`,
+            left: `${x}px`,
+            border: '1px solid black',
+            backgroundColor: 'white'
+          }"
+        >
+          <input type="text" v-model="tmp_element.name" />
+          <br />
+          <input
+            v-show="tmp_element.tokens !== undefined"
+            type="number"
+            min="0"
+            v-model.number="tmp_element.tokens"
+          />
+          <div>
+            <button style="padding: 0;" @click="tmp_element = null">
+              Cancelar
+            </button>
+            <button style="padding: 0;" type="submit" @click="update_element">
+              Atualizar
+            </button>
+          </div>
+        </form>
+      </template>
     </joint-paper>
   </div>
 </template>
@@ -123,7 +153,10 @@ export default {
         removing_transition: false,
         removing_arc: false,
         removing_token: false
-      }
+      },
+      x: 0,
+      y: 0,
+      tmp_element: null
     };
   },
 
@@ -145,12 +178,14 @@ export default {
     set_object({ x, y }) {
       if (this.states.setting_place) {
         this.places.push({
+          key: `Place ${this.place_id}`,
           name: `Place ${this.place_id++}`,
           position: { x, y },
           tokens: 0
         });
       } else if (this.states.setting_transition) {
         this.transitions.push({
+          key: `Transition ${this.transition_id}`,
           name: `Transition ${this.transition_id++}`,
           position: { x, y }
         });
@@ -215,6 +250,37 @@ export default {
         const index = this.arcs.findIndex((arc) => arc.id === id);
 
         this.arcs.splice(index, 1);
+      }
+    },
+
+    handle_element_contextmenu({ id, type, position }) {
+      if (type === "place") {
+        const index = this.places.findIndex((place) => place.id === id);
+        this.tmp_element = { index, type, ...this.places[index] };
+      } else {
+        const index = this.transitions.findIndex(
+          (transition) => transition.id === id
+        );
+        this.tmp_element = { index, type, ...this.transitions[index] };
+      }
+
+      this.x = position.x;
+      this.y = position.y;
+    },
+
+    update_element() {
+      if (this.tmp_element.type === "place") {
+        const place = this.places[this.tmp_element.index];
+        for (const key in place) {
+          place[key] = this.tmp_element[key];
+        }
+        this.tmp_element = null;
+      } else if (this.tmp_element.type === "transition") {
+        const transition = this.transitions[this.tmp_element.index];
+        for (const key in transition) {
+          transition[key] = this.tmp_element[key];
+        }
+        this.tmp_element = null;
       }
     }
   }

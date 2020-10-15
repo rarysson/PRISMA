@@ -65,6 +65,8 @@ export default {
         if (new_val.tokens >= 0) {
           this.place.set("tokens", new_val.tokens);
         }
+
+        this.place.attr(".label/text", new_val.name);
       }
     }
   }
