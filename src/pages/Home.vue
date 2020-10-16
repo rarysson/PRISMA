@@ -1,59 +1,13 @@
 <template>
   <div class="page-container">
-    <fieldset class="menu">
-      <legend>INSERIR</legend>
-      <button
-        :class="{ active: states.setting_place }"
-        @click="toggle_state('setting_place')"
-      >
-        LUGAR
-      </button>
-      <button
-        :class="{ active: states.setting_transition }"
-        @click="toggle_state('setting_transition')"
-      >
-        TRANSIÇÃO
-      </button>
-      <button
-        :class="{ active: states.setting_arc }"
-        @click="toggle_state('setting_arc')"
-      >
-        ARCO
-      </button>
-      <button
-        :class="{ active: states.setting_token }"
-        @click="toggle_state('setting_token')"
-      >
-        FICHA
-      </button>
-    </fieldset>
-    <fieldset class="menu">
-      <legend>REMOVER</legend>
-      <button
-        :class="{ active: states.removing_place }"
-        @click="toggle_state('removing_place')"
-      >
-        LUGAR
-      </button>
-      <button
-        :class="{ active: states.removing_transition }"
-        @click="toggle_state('removing_transition')"
-      >
-        TRANSIÇÃO
-      </button>
-      <button
-        :class="{ active: states.removing_arc }"
-        @click="toggle_state('removing_arc')"
-      >
-        ARCO
-      </button>
-      <button
-        :class="{ active: states.removing_token }"
-        @click="toggle_state('removing_token')"
-      >
-        FICHA
-      </button>
-    </fieldset>
+    <menu-tabs>
+      <option-tab title="Modelar">
+        <model-tab v-model="current_state" />
+      </option-tab>
+      <option-tab title="Simular">
+        <simulate-tab />
+      </option-tab>
+    </menu-tabs>
 
     <joint-paper
       @mounted="set_graph"
@@ -134,6 +88,10 @@ import JointPaper from "@/components/JointPaper";
 import JointPlace from "@/components/JointPlace";
 import JointTransition from "@/components/JointTransition";
 import JointArc from "@/components/JointArc";
+import MenuTabs from "@/components/MenuTabs";
+import OptionTab from "@/components/OptionTab";
+import ModelTab from "@/components/ModelTab";
+import SimulateTab from "@/components/SimulateTab";
 
 export default {
   name: "Home",
@@ -142,7 +100,11 @@ export default {
     JointPaper,
     JointPlace,
     JointTransition,
-    JointArc
+    JointArc,
+    MenuTabs,
+    OptionTab,
+    ModelTab,
+    SimulateTab
   },
 
   data() {
@@ -154,16 +116,7 @@ export default {
       transition_id: 0,
       arcs: [],
       tmp_arc: [],
-      states: {
-        setting_place: false,
-        setting_transition: false,
-        setting_arc: false,
-        setting_token: false,
-        removing_place: false,
-        removing_transition: false,
-        removing_arc: false,
-        removing_token: false
-      },
+      current_state: "",
       x: 0,
       y: 0,
       tmp_element: null,
@@ -179,25 +132,15 @@ export default {
       this.graph = graph;
     },
 
-    toggle_state(state) {
-      for (const key in this.states) {
-        if (key === state) {
-          this.states[key] = !this.states[key];
-        } else {
-          this.states[key] = false;
-        }
-      }
-    },
-
     set_object({ x, y }) {
-      if (this.states.setting_place) {
+      if (this.current_state === "setting_place") {
         this.places.push({
           key: `P${this.place_id}`,
           name: `Place ${this.place_id++}`,
           position: { x, y },
           tokens: 0
         });
-      } else if (this.states.setting_transition) {
+      } else if (this.current_state === "setting_transition") {
         this.transitions.push({
           key: `T${this.transition_id}`,
           name: `Transition ${this.transition_id++}`,
@@ -207,7 +150,7 @@ export default {
     },
 
     handle_element_click({ id, type }) {
-      if (this.states.setting_arc) {
+      if (this.current_state === "setting_arc") {
         this.tmp_arc.push({ id, type });
 
         if (this.tmp_arc.length === 2) {
@@ -231,24 +174,27 @@ export default {
 
           this.tmp_arc = [];
         }
-      } else if (this.states.setting_token) {
+      } else if (this.current_state === "setting_token") {
         const place = this.places.find((place) => place.id === id);
 
         place.tokens++;
-      } else if (this.states.removing_token) {
+      } else if (this.current_state === "removing_token") {
         const place = this.places.find((place) => place.id === id);
 
         if (place.tokens > 0) {
           place.tokens--;
         }
-      } else if (this.states.removing_place && type === "place") {
+      } else if (this.current_state === "removing_place" && type === "place") {
         const index = this.places.findIndex((place) => place.id === id);
 
         this.arcs = this.arcs.filter(
           (arc) => arc.source !== id && arc.target !== id
         );
         this.places.splice(index, 1);
-      } else if (this.states.removing_transition && type === "transition") {
+      } else if (
+        this.current_state === "removing_transition" &&
+        type === "transition"
+      ) {
         const index = this.transitions.findIndex(
           (transition) => transition.id === id
         );
@@ -261,7 +207,7 @@ export default {
     },
 
     handle_link_click({ id }) {
-      if (this.states.removing_arc) {
+      if (this.current_state === "removing_arc") {
         const index = this.arcs.findIndex((arc) => arc.id === id);
 
         this.arcs.splice(index, 1);
@@ -348,20 +294,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.active {
-  border: 2px solid black;
-}
-
-.menu {
-  text-align: center;
-  padding-top: 20px;
-  width: 50%;
-  display: inline-block;
-}
-
-button {
-  padding: 15px;
-}
-</style>
