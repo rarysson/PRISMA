@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: "MenuTabs",
+  name: "VTabs",
 
   data() {
     return {

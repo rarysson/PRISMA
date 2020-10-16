@@ -5,13 +5,8 @@
 <script>
 const petri_net = window.joint.shapes.pn;
 
-function get_valid_tokens(tokens) {
-  const t = tokens || 0;
-  return t >= 0 ? t : 0;
-}
-
 export default {
-  name: "JointPlace",
+  name: "JointTransition",
 
   props: {
     graph: {
@@ -27,12 +22,12 @@ export default {
 
   data() {
     return {
-      place: null
+      transition: null
     };
   },
 
   mounted() {
-    this.place = new petri_net.Place({
+    this.transition = new petri_net.Transition({
       position: { x: this.attrs.position.x, y: this.attrs.position.y },
       attrs: {
         ".label": {
@@ -40,33 +35,26 @@ export default {
           fill: "#3a3a3a"
         },
         ".root": {
+          "fill": "#ffffff",
           "stroke": "#3a3a3a",
           "stroke-width": 2
-        },
-        ".tokens > circle": {
-          fill: "#7a7e9b"
         }
-      },
-      tokens: get_valid_tokens(this.attrs.tokens)
+      }
     });
 
-    this.graph.addCell(this.place);
-    this.$emit("mounted", this.place.id);
+    this.graph.addCell(this.transition);
+    this.$emit("mounted", this.transition.id);
   },
 
   beforeDestroy() {
-    this.place.remove();
+    this.transition.remove();
   },
 
   watch: {
     attrs: {
       deep: true,
-      handler(new_val) {
-        if (new_val.tokens >= 0) {
-          this.place.set("tokens", new_val.tokens);
-        }
-
-        this.place.attr(".label/text", new_val.name);
+      handler({ name }) {
+        this.transition.attr(".label/text", name);
       }
     }
   }

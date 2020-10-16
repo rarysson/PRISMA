@@ -1,21 +1,19 @@
 <template>
   <div class="page-container">
-    <menu-tabs>
-      <option-tab title="Modelar">
-        <model-tab v-model="current_state" />
-      </option-tab>
-      <option-tab title="Simular">
-        <simulate-tab />
-      </option-tab>
-    </menu-tabs>
+    <v-tabs>
+      <v-tab title="Modelar">
+        <option-model v-model="current_state" />
+      </v-tab>
+      <v-tab title="Simular">
+        <option-simulate />
+      </v-tab>
+    </v-tabs>
 
     <joint-paper
       @mounted="set_graph"
       @blank-click="set_object"
       @element-click="handle_element_click"
-      @link-click="handle_link_click"
       @element-contextmenu="handle_element_contextmenu"
-      @link-contextmenu="handle_element_contextmenu"
     >
       <div v-if="graph !== null" hidden>
         <joint-place
@@ -84,14 +82,14 @@
 </template>
 
 <script>
-import JointPaper from "@/components/JointPaper";
-import JointPlace from "@/components/JointPlace";
-import JointTransition from "@/components/JointTransition";
-import JointArc from "@/components/JointArc";
-import MenuTabs from "@/components/MenuTabs";
-import OptionTab from "@/components/OptionTab";
-import ModelTab from "@/components/ModelTab";
-import SimulateTab from "@/components/SimulateTab";
+import JointPaper from "@/components/Joint/JointPaper";
+import JointPlace from "@/components/Joint/JointPlace";
+import JointTransition from "@/components/Joint/JointTransition";
+import JointArc from "@/components/Joint/JointArc";
+import VTabs from "@/components/Widgets/VTab/VTabs";
+import VTab from "@/components/Widgets/VTab/VTab";
+import OptionModel from "@/components/TabOptions/OptionModel";
+import OptionSimulate from "@/components/TabOptions/OptionSimulate";
 
 export default {
   name: "Home",
@@ -101,10 +99,10 @@ export default {
     JointPlace,
     JointTransition,
     JointArc,
-    MenuTabs,
-    OptionTab,
-    ModelTab,
-    SimulateTab
+    VTabs,
+    VTab,
+    OptionModel,
+    OptionSimulate
   },
 
   data() {

@@ -58,7 +58,6 @@ module.exports = {
         "no-restricted-syntax": ["error", "SequenceExpression"],
         "no-throw-literal": "error",
         "no-unmodified-loop-condition": "error",
-        "no-unused-expressions": "error",
         "no-useless-concat": "error",
         "no-useless-escape": "error",
         "no-void": "error",

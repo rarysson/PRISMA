@@ -32,6 +32,7 @@ export default {
   },
 
   mounted() {
+    const weight = get_valid_weight(this.attrs.weight);
     this.arc = new petri_net.Link({
       source: { id: this.attrs.source, selector: ".root" },
       target: { id: this.attrs.target, selector: ".root" },
@@ -43,11 +44,11 @@ export default {
           "stroke": "#3a3a3a"
         }
       },
-      weight: get_valid_weight(this.attrs.weight)
+      weight
     }).appendLabel({
       attrs: {
         text: {
-          text: get_valid_weight(this.attrs.weight)
+          text: weight
         }
       }
     });

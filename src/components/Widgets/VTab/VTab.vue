@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: "OptionTab",
+  name: "VTab",
 
   props: {
     title: {

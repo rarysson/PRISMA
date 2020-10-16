@@ -10,6 +10,10 @@
 <script>
 const graph = new window.joint.dia.Graph();
 
+function get_formatted_type(type) {
+  return type.replace("pn.", "").toLowerCase();
+}
+
 export default {
   name: "JointPaper",
 
@@ -38,45 +42,43 @@ export default {
       }
     });
 
-    this.paper.on("blank:pointerclick", (event, x, y) => {
-      this.$emit("blank-click", { x, y });
-    });
+    this.paper.on("blank:pointerclick", this.handle_blank_click);
+    this.paper.on("element:pointerclick", this.handle_element_click);
+    this.paper.on("element:contextmenu", this.handle_context_menu);
+    this.paper.on("link:pointerclick", this.handle_element_click);
+    this.paper.on("link:contextmenu", this.handle_context_menu);
+    this.$emit("mounted", graph);
+  },
 
-    this.paper.on("element:pointerclick", (element) => {
+  beforeDestroy() {
+    this.paper.off("blank:pointerclick", this.handle_blank_click);
+    this.paper.off("element:pointerclick", this.handle_element_click);
+    this.paper.off("element:contextmenu", this.handle_context_menu);
+    this.paper.off("link:pointerclick", this.handle_element_click);
+    this.paper.off("link:contextmenu", this.handle_context_menu);
+  },
+
+  methods: {
+    handle_blank_click(event, x, y) {
+      this.$emit("blank-click", { x, y });
+    },
+
+    handle_element_click(element) {
       const id = element.model.id;
-      const type = element.model.attributes.type
-        .replace("pn.", "")
-        .toLowerCase();
+      const type = get_formatted_type(element.model.attributes.type);
 
       this.$emit("element-click", { id, type });
-    });
+    },
 
-    this.paper.on("element:contextmenu", (element, event, x, y) => {
+    handle_context_menu(element, event, x, y) {
       const id = element.model.id;
-      const type = element.model.attributes.type
-        .replace("pn.", "")
-        .toLowerCase();
+      const type = get_formatted_type(element.model.attributes.type);
 
       x += this.$refs.paper.offsetLeft;
       y += this.$refs.paper.offsetTop;
 
       this.$emit("element-contextmenu", { id, type, position: { x, y } });
-    });
-
-    this.paper.on("link:pointerclick", (element) => {
-      this.$emit("link-click", { id: element.model.id, type: "arc" });
-    });
-
-    this.paper.on("link:contextmenu", (element, event, x, y) => {
-      const id = element.model.id;
-
-      x += this.$refs.paper.offsetLeft;
-      y += this.$refs.paper.offsetTop;
-
-      this.$emit("link-contextmenu", { id, type: "arc", position: { x, y } });
-    });
-
-    this.$emit("mounted", graph);
+    }
   }
 };
 </script>

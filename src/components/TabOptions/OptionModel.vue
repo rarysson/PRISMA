@@ -2,55 +2,31 @@
   <div>
     <fieldset class="menu">
       <legend>INSERIR</legend>
-      <button
-        :class="{ active: states.setting_place }"
-        @click="toggle_state('setting_place')"
-      >
+      <button @click="toggle_state('setting_place', $event)">
         LUGAR
       </button>
-      <button
-        :class="{ active: states.setting_transition }"
-        @click="toggle_state('setting_transition')"
-      >
+      <button @click="toggle_state('setting_transition', $event)">
         TRANSIÇÃO
       </button>
-      <button
-        :class="{ active: states.setting_arc }"
-        @click="toggle_state('setting_arc')"
-      >
+      <button @click="toggle_state('setting_arc', $event)">
         ARCO
       </button>
-      <button
-        :class="{ active: states.setting_token }"
-        @click="toggle_state('setting_token')"
-      >
+      <button @click="toggle_state('setting_token', $event)">
         FICHA
       </button>
     </fieldset>
     <fieldset class="menu">
       <legend>REMOVER</legend>
-      <button
-        :class="{ active: states.removing_place }"
-        @click="toggle_state('removing_place')"
-      >
+      <button @click="toggle_state('removing_place', $event)">
         LUGAR
       </button>
-      <button
-        :class="{ active: states.removing_transition }"
-        @click="toggle_state('removing_transition')"
-      >
+      <button @click="toggle_state('removing_transition', $event)">
         TRANSIÇÃO
       </button>
-      <button
-        :class="{ active: states.removing_arc }"
-        @click="toggle_state('removing_arc')"
-      >
+      <button @click="toggle_state('removing_arc', $event)">
         ARCO
       </button>
-      <button
-        :class="{ active: states.removing_token }"
-        @click="toggle_state('removing_token')"
-      >
+      <button @click="toggle_state('removing_token', $event)">
         FICHA
       </button>
     </fieldset>
@@ -59,7 +35,7 @@
 
 <script>
 export default {
-  name: "ModelTab",
+  name: "OptionModel",
 
   props: {
     value: {
@@ -71,6 +47,7 @@ export default {
   data() {
     return {
       current_state: this.value,
+      last_element: null,
       states: {
         setting_place: false,
         setting_transition: false,
@@ -91,15 +68,26 @@ export default {
   },
 
   methods: {
-    toggle_state(state) {
+    toggle_state(state, event) {
+      this.last_element?.classList.remove("active");
+      event.target.classList.add("active");
+
       for (const key in this.states) {
         if (key === state) {
           this.states[key] = !this.states[key];
-          this.current_state = this.states[key] ? key : "";
+
+          if (this.states[key]) {
+            this.current_state = key;
+          } else {
+            this.current_state = "";
+            event.target.classList.remove("active");
+          }
         } else {
           this.states[key] = false;
         }
       }
+
+      this.last_element = event.target;
     }
   }
 };
