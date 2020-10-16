@@ -29,7 +29,7 @@ export default {
       model: graph,
       width: 800,
       height: 400,
-      gridSize: 5,
+      gridSize: 1,
       defaultAnchor: { name: "center" },
       defaultConnectionPoint: { name: "boundary" },
       linkPinning: false,
@@ -65,14 +65,16 @@ export default {
 
     handle_element_click(element) {
       const id = element.model.id;
-      const type = get_formatted_type(element.model.attributes.type);
+      let type = get_formatted_type(element.model.attributes.type);
+      type = type === "link" ? "arc" : type;
 
       this.$emit("element-click", { id, type });
     },
 
     handle_context_menu(element, event, x, y) {
       const id = element.model.id;
-      const type = get_formatted_type(element.model.attributes.type);
+      let type = get_formatted_type(element.model.attributes.type);
+      type = type === "link" ? "arc" : type;
 
       x += this.$refs.paper.offsetLeft;
       y += this.$refs.paper.offsetTop;

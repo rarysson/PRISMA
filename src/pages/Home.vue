@@ -10,7 +10,7 @@
     </v-tabs>
 
     <joint-paper
-      @mounted="set_graph"
+      @mounted="graph = $event"
       @blank-click="set_object"
       @element-click="handle_element_click"
       @element-contextmenu="handle_element_contextmenu"
@@ -39,43 +39,11 @@
         />
       </div>
       <template #overlay-elements>
-        <form
-          v-if="tmp_element !== null"
-          :style="{
-            position: 'absolute',
-            top: `${y}px`,
-            left: `${x}px`,
-            border: '1px solid black',
-            backgroundColor: 'white'
-          }"
-        >
-          <input
-            v-show="tmp_element.name !== undefined"
-            type="text"
-            v-model="tmp_element.name"
-          />
-          <br />
-          <input
-            v-show="tmp_element.tokens !== undefined"
-            type="number"
-            min="0"
-            v-model.number="tmp_element.tokens"
-          />
-          <input
-            v-show="tmp_element.weight !== undefined"
-            type="number"
-            min="1"
-            v-model.number="tmp_element.weight"
-          />
-          <div>
-            <button style="padding: 0;" @click="tmp_element = null">
-              Cancelar
-            </button>
-            <button style="padding: 0;" type="submit" @click="update_element">
-              Atualizar
-            </button>
-          </div>
-        </form>
+        <context-menu
+          :data="tmp_element"
+          :position="context_menu_position"
+          @update="update_element"
+        />
       </template>
     </joint-paper>
   </div>
@@ -90,6 +58,7 @@ import VTabs from "@/components/Widgets/VTab/VTabs";
 import VTab from "@/components/Widgets/VTab/VTab";
 import OptionModel from "@/components/TabOptions/OptionModel";
 import OptionSimulate from "@/components/TabOptions/OptionSimulate";
+import ContextMenu from "@/components/Widgets/Joint/ContextMenu";
 
 export default {
   name: "Home",
@@ -102,7 +71,8 @@ export default {
     VTabs,
     VTab,
     OptionModel,
-    OptionSimulate
+    OptionSimulate,
+    ContextMenu
   },
 
   data() {
@@ -114,10 +84,9 @@ export default {
       transition_id: 0,
       arcs: [],
       tmp_arc: [],
-      current_state: "",
-      x: 0,
-      y: 0,
       tmp_element: null,
+      current_state: "",
+      context_menu_position: { x: 0, y: 0 },
       element_names: {
         names: [],
         need_update: true
@@ -126,10 +95,6 @@ export default {
   },
 
   methods: {
-    set_graph(graph) {
-      this.graph = graph;
-    },
-
     set_object({ x, y }) {
       if (this.current_state === "setting_place") {
         this.places.push({
@@ -147,147 +112,95 @@ export default {
       }
     },
 
-    handle_element_click({ id, type }) {
-      if (this.current_state === "setting_arc") {
-        this.tmp_arc.push({ id, type });
+    set_arc(id, type) {
+      this.tmp_arc.push({ id, type });
 
-        if (this.tmp_arc.length === 2) {
-          const source = this.tmp_arc[0];
-          const target = this.tmp_arc[1];
+      if (this.tmp_arc.length === 2) {
+        const source = this.tmp_arc[0];
+        const target = this.tmp_arc[1];
 
-          if (source.type !== target.type) {
-            const has_arc = this.arcs.some(
-              (arc) => arc.source === source.id && arc.target === target.id
-            );
+        if (source.type !== target.type) {
+          const has_arc = this.arcs.some(
+            (arc) => arc.source === source.id && arc.target === target.id
+          );
 
-            if (!has_arc) {
-              this.arcs.push({
-                link_id: source.id + target.id,
-                source: source.id,
-                target: target.id,
-                weight: 1
-              });
-            }
+          if (!has_arc) {
+            this.arcs.push({
+              link_id: source.id + target.id,
+              source: source.id,
+              target: target.id,
+              weight: 1
+            });
           }
-
-          this.tmp_arc = [];
         }
-      } else if (this.current_state === "setting_token") {
-        const place = this.places.find((place) => place.id === id);
 
-        place.tokens++;
-      } else if (this.current_state === "removing_token") {
-        const place = this.places.find((place) => place.id === id);
-
-        if (place.tokens > 0) {
-          place.tokens--;
-        }
-      } else if (this.current_state === "removing_place" && type === "place") {
-        const index = this.places.findIndex((place) => place.id === id);
-
-        this.arcs = this.arcs.filter(
-          (arc) => arc.source !== id && arc.target !== id
-        );
-        this.places.splice(index, 1);
-      } else if (
-        this.current_state === "removing_transition" &&
-        type === "transition"
-      ) {
-        const index = this.transitions.findIndex(
-          (transition) => transition.id === id
-        );
-
-        this.arcs = this.arcs.filter(
-          (arc) => arc.source !== id && arc.target !== id
-        );
-        this.transitions.splice(index, 1);
+        this.tmp_arc = [];
       }
     },
 
-    handle_link_click({ id }) {
-      if (this.current_state === "removing_arc") {
-        const index = this.arcs.findIndex((arc) => arc.id === id);
+    change_token(id) {
+      const place = this.places.find((place) => place.id === id);
 
-        this.arcs.splice(index, 1);
+      if (this.current_state === "setting_token") {
+        place.tokens++;
+      } else if (this.current_state === "removing_token" && place.tokens > 0) {
+        place.tokens--;
+      }
+    },
+
+    handle_element_click({ id, type }) {
+      if (this.current_state === "setting_arc") {
+        this.set_arc(id, type);
+      } else if (this.current_state.includes("token")) {
+        this.change_token(id);
+      } else if (this.current_state.includes("removing")) {
+        const key = `${type}s`;
+        const index = this[key].findIndex((el) => el.id === id);
+        this.arcs = this.arcs.filter(
+          (arc) => arc.source !== id && arc.target !== id
+        );
+
+        this[key].splice(index, 1);
       }
     },
 
     handle_element_contextmenu({ id, type, position }) {
-      if (type === "place") {
-        const index = this.places.findIndex((place) => place.id === id);
-        this.tmp_element = { index, type, ...this.places[index] };
-      } else if (type === "transition") {
-        const index = this.transitions.findIndex(
-          (transition) => transition.id === id
-        );
-        this.tmp_element = { index, type, ...this.transitions[index] };
-      } else if (type === "arc") {
-        const index = this.arcs.findIndex((arc) => arc.id === id);
-        this.tmp_element = { index, type, ...this.arcs[index] };
-      }
+      const key = `${type}s`;
+      const index = this[key].findIndex((el) => el.id === id);
+      this.tmp_element = { index, type, ...this[key][index] };
+      this.context_menu_position = position;
+    },
 
-      this.x = position.x;
-      this.y = position.y;
+    reset_list_name() {
+      this.element_names.names = [];
+      this.element_names.names.push(...this.places.map((p) => p.name));
+      this.element_names.names.push(...this.transitions.map((t) => t.name));
     },
 
     update_element() {
-      if (this.tmp_element.type === "place") {
-        const place = this.places[this.tmp_element.index];
-        for (const key in place) {
-          if (key === "name") {
-            if (this.element_names.need_update) {
-              this.element_names.names = [];
-              this.element_names.names.push(...this.places.map((p) => p.name));
-              this.element_names.names.push(
-                ...this.transitions.map((t) => t.name)
-              );
-            }
+      const type_key = `${this.tmp_element.type}s`;
+      const element = this[type_key][this.tmp_element.index];
 
-            if (place.name !== this.tmp_element.name) {
-              if (!this.element_names.names.includes(this.tmp_element.name)) {
-                place.name = this.tmp_element.name;
-                this.element_names.need_update = true;
-              } else {
-                this.element_names.need_update = false;
-              }
-            }
-          } else {
-            place[key] = this.tmp_element[key];
+      for (const key in element) {
+        if (key === "name") {
+          if (this.element_names.need_update) {
+            this.reset_list_name();
           }
-        }
-        this.tmp_element = null;
-      } else if (this.tmp_element.type === "transition") {
-        const transition = this.transitions[this.tmp_element.index];
-        for (const key in transition) {
-          if (key === "name") {
-            if (this.element_names.need_update) {
-              this.element_names.names = [];
-              this.element_names.names.push(...this.places.map((p) => p.name));
-              this.element_names.names.push(
-                ...this.transitions.map((t) => t.name)
-              );
-            }
 
-            if (transition.name !== this.tmp_element.name) {
-              if (!this.element_names.names.includes(this.tmp_element.name)) {
-                transition.name = this.tmp_element.name;
-                this.element_names.need_update = true;
-              } else {
-                this.element_names.need_update = false;
-              }
+          if (element.name !== this.tmp_element.name) {
+            if (!this.element_names.names.includes(this.tmp_element.name)) {
+              element.name = this.tmp_element.name;
+              this.element_names.need_update = true;
+            } else {
+              this.element_names.need_update = false;
             }
-          } else {
-            transition[key] = this.tmp_element[key];
           }
+        } else {
+          element[key] = this.tmp_element[key];
         }
-        this.tmp_element = null;
-      } else if (this.tmp_element.type === "arc") {
-        const arc = this.arcs[this.tmp_element.index];
-        for (const key in arc) {
-          arc[key] = this.tmp_element[key];
-        }
-        this.tmp_element = null;
       }
+
+      this.tmp_element = null;
     }
   }
 };
