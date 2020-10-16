@@ -166,7 +166,11 @@ export default {
       },
       x: 0,
       y: 0,
-      tmp_element: null
+      tmp_element: null,
+      element_names: {
+        names: [],
+        need_update: true
+      }
     };
   },
 
@@ -188,14 +192,14 @@ export default {
     set_object({ x, y }) {
       if (this.states.setting_place) {
         this.places.push({
-          key: `Place ${this.place_id}`,
+          key: `P${this.place_id}`,
           name: `Place ${this.place_id++}`,
           position: { x, y },
           tokens: 0
         });
       } else if (this.states.setting_transition) {
         this.transitions.push({
-          key: `Transition ${this.transition_id}`,
+          key: `T${this.transition_id}`,
           name: `Transition ${this.transition_id++}`,
           position: { x, y }
         });
@@ -286,13 +290,51 @@ export default {
       if (this.tmp_element.type === "place") {
         const place = this.places[this.tmp_element.index];
         for (const key in place) {
-          place[key] = this.tmp_element[key];
+          if (key === "name") {
+            if (this.element_names.need_update) {
+              this.element_names.names = [];
+              this.element_names.names.push(...this.places.map((p) => p.name));
+              this.element_names.names.push(
+                ...this.transitions.map((t) => t.name)
+              );
+            }
+
+            if (place.name !== this.tmp_element.name) {
+              if (!this.element_names.names.includes(this.tmp_element.name)) {
+                place.name = this.tmp_element.name;
+                this.element_names.need_update = true;
+              } else {
+                this.element_names.need_update = false;
+              }
+            }
+          } else {
+            place[key] = this.tmp_element[key];
+          }
         }
         this.tmp_element = null;
       } else if (this.tmp_element.type === "transition") {
         const transition = this.transitions[this.tmp_element.index];
         for (const key in transition) {
-          transition[key] = this.tmp_element[key];
+          if (key === "name") {
+            if (this.element_names.need_update) {
+              this.element_names.names = [];
+              this.element_names.names.push(...this.places.map((p) => p.name));
+              this.element_names.names.push(
+                ...this.transitions.map((t) => t.name)
+              );
+            }
+
+            if (transition.name !== this.tmp_element.name) {
+              if (!this.element_names.names.includes(this.tmp_element.name)) {
+                transition.name = this.tmp_element.name;
+                this.element_names.need_update = true;
+              } else {
+                this.element_names.need_update = false;
+              }
+            }
+          } else {
+            transition[key] = this.tmp_element[key];
+          }
         }
         this.tmp_element = null;
       } else if (this.tmp_element.type === "arc") {
