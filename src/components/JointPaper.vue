@@ -64,7 +64,16 @@ export default {
     });
 
     this.paper.on("link:pointerclick", (element) => {
-      this.$emit("link-click", element.model.id);
+      this.$emit("link-click", { id: element.model.id, type: "arc" });
+    });
+
+    this.paper.on("link:contextmenu", (element, event, x, y) => {
+      const id = element.model.id;
+
+      x += this.$refs.paper.offsetLeft;
+      y += this.$refs.paper.offsetTop;
+
+      this.$emit("link-contextmenu", { id, type: "arc", position: { x, y } });
     });
 
     this.$emit("mounted", graph);

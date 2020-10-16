@@ -61,6 +61,7 @@
       @element-click="handle_element_click"
       @link-click="handle_link_click"
       @element-contextmenu="handle_element_contextmenu"
+      @link-contextmenu="handle_element_contextmenu"
     >
       <div v-if="graph !== null" hidden>
         <joint-place
@@ -81,8 +82,7 @@
           v-for="arc in arcs"
           :key="arc.link_id"
           :graph="graph"
-          :source="arc.source"
-          :target="arc.target"
+          :attrs="arc"
           @mounted="arc.id = $event"
         />
       </div>
@@ -97,13 +97,23 @@
             backgroundColor: 'white'
           }"
         >
-          <input type="text" v-model="tmp_element.name" />
+          <input
+            v-show="tmp_element.name !== undefined"
+            type="text"
+            v-model="tmp_element.name"
+          />
           <br />
           <input
             v-show="tmp_element.tokens !== undefined"
             type="number"
             min="0"
             v-model.number="tmp_element.tokens"
+          />
+          <input
+            v-show="tmp_element.weight !== undefined"
+            type="number"
+            min="1"
+            v-model.number="tmp_element.weight"
           />
           <div>
             <button style="padding: 0;" @click="tmp_element = null">
@@ -209,7 +219,8 @@ export default {
               this.arcs.push({
                 link_id: source.id + target.id,
                 source: source.id,
-                target: target.id
+                target: target.id,
+                weight: 1
               });
             }
           }
@@ -245,7 +256,7 @@ export default {
       }
     },
 
-    handle_link_click(id) {
+    handle_link_click({ id }) {
       if (this.states.removing_arc) {
         const index = this.arcs.findIndex((arc) => arc.id === id);
 
@@ -257,11 +268,14 @@ export default {
       if (type === "place") {
         const index = this.places.findIndex((place) => place.id === id);
         this.tmp_element = { index, type, ...this.places[index] };
-      } else {
+      } else if (type === "transition") {
         const index = this.transitions.findIndex(
           (transition) => transition.id === id
         );
         this.tmp_element = { index, type, ...this.transitions[index] };
+      } else if (type === "arc") {
+        const index = this.arcs.findIndex((arc) => arc.id === id);
+        this.tmp_element = { index, type, ...this.arcs[index] };
       }
 
       this.x = position.x;
@@ -279,6 +293,12 @@ export default {
         const transition = this.transitions[this.tmp_element.index];
         for (const key in transition) {
           transition[key] = this.tmp_element[key];
+        }
+        this.tmp_element = null;
+      } else if (this.tmp_element.type === "arc") {
+        const arc = this.arcs[this.tmp_element.index];
+        for (const key in arc) {
+          arc[key] = this.tmp_element[key];
         }
         this.tmp_element = null;
       }
