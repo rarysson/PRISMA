@@ -1,0 +1,1 @@
+global.joint = require("joint");

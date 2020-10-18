@@ -19,3 +19,8 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# É necessário incluir essa subpasta de node_modules para conseguir executar os testes
+# Cada biblioteca está na sua versão minificada, por isso não será um grande problema.
+# Caso consiga instalar o JointJS sem ser pela instação global, remova essa subpasta.
+!tests/setup/node_modules
