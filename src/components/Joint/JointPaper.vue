@@ -17,6 +17,11 @@ export default {
     graph: {
       type: Object,
       required: true
+    },
+
+    extraOptions: {
+      type: Object,
+      default: () => ({})
     }
   },
 
@@ -42,7 +47,8 @@ export default {
         const target_type = link.targetView.model.attributes.type;
 
         return source_type !== target_type;
-      }
+      },
+      ...this.extraOptions
     });
 
     this.paper.on("blank:pointerclick", this.handle_blank_click);

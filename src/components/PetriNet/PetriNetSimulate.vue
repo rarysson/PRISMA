@@ -2,6 +2,7 @@
   <joint-paper
     v-if="graph !== null"
     :graph="graph"
+    :extra-options="{ interactive: false }"
     @element-click="handle_element_click"
   />
 </template>
