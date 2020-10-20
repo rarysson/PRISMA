@@ -4,7 +4,12 @@ import JointPaper from "@/components/Joint/JointPaper";
 let wrapper;
 
 beforeEach(() => {
-    wrapper = shallowMount(JointPaper);
+    const graph = new window.joint.dia.Graph();
+    wrapper = shallowMount(JointPaper, {
+        propsData: {
+            graph
+        }
+    });
 });
 
 afterEach(() => {
@@ -18,14 +23,6 @@ describe("Componente JointPaper", () => {
 
     test("Paper data é não nulo após componente instanciado", () => {
         expect(wrapper.vm.paper).not.toBeNull();
-    });
-
-    test("Emite evento mounted", () => {
-        expect(wrapper.emitted().mounted.length).toBe(1);
-    });
-
-    test("Evento mounted retorna um objeto graph", () => {
-        expect(typeof wrapper.emitted().mounted[0][0]).toBe("object");
     });
 
     test("Paper é destruído", () => {

@@ -1,17 +1,53 @@
 {
-  "name": "petri-net",
+  "name": "prisma",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
+  "prettier": {
+    "semi": true,
+    "singleQuote": false,
+    "quoteProps": "consistent",
+    "jsxSingleQuote": false,
+    "trailingComma": "none",
+    "bracketSpacing": true,
+    "jsxBracketSameLine": false,
+    "arrowParens": "always",
+    "htmlWhitespaceSensitivity": "css",
+    "vueIndentScriptAndStyle": false
+  },
+  "jest": {
+    "preset": "@vue/cli-plugin-unit-jest",
+    "setupFiles": [
+      "./tests/setup/setup.js"
+    ],
+    "collectCoverageFrom": [
+      "<rootDir>/src/**/*.{js,vue}",
+      "!<rootDir>/src/{main.js,App.vue}",
+      "!<rootDir>/src/plugins/**",
+      "!<rootDir>/src/router/**",
+      "!<rootDir>/src/store/**"
+    ],
+    "coverageReporters": [
+      "lcov",
+      "text-summary"
+    ]
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
   "dependencies": {
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
-    "vue-router": "^3.2.0"
+    "vue-router": "^3.2.0",
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

@@ -8,14 +8,17 @@
 </template>
 
 <script>
-const graph = new window.joint.dia.Graph();
-
-function get_formatted_type(type) {
-  return type.replace("pn.", "").toLowerCase();
-}
+import { get_formatted_joint_type } from "@/util/funcs";
 
 export default {
   name: "JointPaper",
+
+  props: {
+    graph: {
+      type: Object,
+      required: true
+    }
+  },
 
   data() {
     return {
@@ -26,7 +29,7 @@ export default {
   mounted() {
     this.paper = new window.joint.dia.Paper({
       el: document.getElementById("joint-paper"),
-      model: graph,
+      model: this.graph,
       width: 800,
       height: 400,
       gridSize: 1,
@@ -47,7 +50,6 @@ export default {
     this.paper.on("element:contextmenu", this.handle_context_menu);
     this.paper.on("link:pointerclick", this.handle_element_click);
     this.paper.on("link:contextmenu", this.handle_context_menu);
-    this.$emit("mounted", graph);
   },
 
   beforeDestroy() {
@@ -65,16 +67,14 @@ export default {
 
     handle_element_click(element) {
       const id = element.model.id;
-      let type = get_formatted_type(element.model.attributes.type);
-      type = type === "link" ? "arc" : type;
+      const type = get_formatted_joint_type(element.model.attributes.type);
 
       this.$emit("element-click", { id, type });
     },
 
     handle_context_menu(element, event, x, y) {
       const id = element.model.id;
-      let type = get_formatted_type(element.model.attributes.type);
-      type = type === "link" ? "arc" : type;
+      const type = get_formatted_joint_type(element.model.attributes.type);
 
       x += this.$refs.paper.offsetLeft;
       y += this.$refs.paper.offsetTop;

@@ -3,12 +3,9 @@
 </template>
 
 <script>
-const petri_net = window.joint.shapes.pn;
+import { get_valid_number } from "@/util/funcs";
 
-function get_valid_weight(weight) {
-  const w = weight || 1;
-  return w >= 1 ? w : 1;
-}
+const petri_net = window.joint.shapes.pn;
 
 export default {
   name: "JointArc",
@@ -22,6 +19,10 @@ export default {
     attrs: {
       type: Object,
       required: true
+    },
+
+    jointObj: {
+      type: Object
     }
   },
 
@@ -32,29 +33,34 @@ export default {
   },
 
   mounted() {
-    const weight = get_valid_weight(this.attrs.weight);
-    this.arc = new petri_net.Link({
-      source: { id: this.attrs.source, selector: ".root" },
-      target: { id: this.attrs.target, selector: ".root" },
-      attrs: {
-        ".connection": {
-          "fill": "none",
-          "stroke-linejoin": "round",
-          "stroke-width": "2",
-          "stroke": "#3a3a3a"
-        }
-      },
-      weight
-    }).appendLabel({
-      attrs: {
-        text: {
-          text: weight
-        }
-      }
-    });
+    const weight = get_valid_number(this.attrs.weight, 1);
 
-    this.graph.addCell(this.arc);
-    this.$emit("mounted", this.arc.id);
+    if (this.jointObj) {
+      this.arc = this.jointObj;
+    } else {
+      this.arc = new petri_net.Link({
+        source: { id: this.attrs.source, selector: ".root" },
+        target: { id: this.attrs.target, selector: ".root" },
+        attrs: {
+          ".connection": {
+            "fill": "none",
+            "stroke-linejoin": "round",
+            "stroke-width": "2",
+            "stroke": "#3a3a3a"
+          }
+        },
+        weight
+      }).appendLabel({
+        attrs: {
+          text: {
+            text: weight
+          }
+        }
+      });
+
+      this.graph.addCell(this.arc);
+      this.$emit("mounted", this.arc.id);
+    }
   },
 
   beforeDestroy() {

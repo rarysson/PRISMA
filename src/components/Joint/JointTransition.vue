@@ -17,6 +17,10 @@ export default {
     attrs: {
       type: Object,
       required: true
+    },
+
+    jointObj: {
+      type: Object
     }
   },
 
@@ -27,23 +31,27 @@ export default {
   },
 
   mounted() {
-    this.transition = new petri_net.Transition({
-      position: { x: this.attrs.position.x, y: this.attrs.position.y },
-      attrs: {
-        ".label": {
-          text: this.attrs.name,
-          fill: "#3a3a3a"
-        },
-        ".root": {
-          "fill": "#ffffff",
-          "stroke": "#3a3a3a",
-          "stroke-width": 2
+    if (this.jointObj) {
+      this.transition = this.jointObj;
+    } else {
+      this.transition = new petri_net.Transition({
+        position: { x: this.attrs.position.x, y: this.attrs.position.y },
+        attrs: {
+          ".label": {
+            text: this.attrs.name,
+            fill: "#3a3a3a"
+          },
+          ".root": {
+            "fill": "#ffffff",
+            "stroke": "#3a3a3a",
+            "stroke-width": 2
+          }
         }
-      }
-    });
+      });
 
-    this.graph.addCell(this.transition);
-    this.$emit("mounted", this.transition.id);
+      this.graph.addCell(this.transition);
+      this.$emit("mounted", this.transition.id);
+    }
   },
 
   beforeDestroy() {

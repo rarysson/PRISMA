@@ -3,12 +3,9 @@
 </template>
 
 <script>
-const petri_net = window.joint.shapes.pn;
+import { get_valid_number } from "@/util/funcs";
 
-function get_valid_tokens(tokens) {
-  const t = tokens || 0;
-  return t >= 0 ? t : 0;
-}
+const petri_net = window.joint.shapes.pn;
 
 export default {
   name: "JointPlace",
@@ -22,6 +19,10 @@ export default {
     attrs: {
       type: Object,
       required: true
+    },
+
+    jointObj: {
+      type: Object
     }
   },
 
@@ -32,26 +33,30 @@ export default {
   },
 
   mounted() {
-    this.place = new petri_net.Place({
-      position: { x: this.attrs.position.x, y: this.attrs.position.y },
-      attrs: {
-        ".label": {
-          text: this.attrs.name,
-          fill: "#3a3a3a"
+    if (this.jointObj) {
+      this.place = this.jointObj;
+    } else {
+      this.place = new petri_net.Place({
+        position: { x: this.attrs.position.x, y: this.attrs.position.y },
+        attrs: {
+          ".label": {
+            text: this.attrs.name,
+            fill: "#3a3a3a"
+          },
+          ".root": {
+            "stroke": "#3a3a3a",
+            "stroke-width": 2
+          },
+          ".tokens > circle": {
+            fill: "#7a7e9b"
+          }
         },
-        ".root": {
-          "stroke": "#3a3a3a",
-          "stroke-width": 2
-        },
-        ".tokens > circle": {
-          fill: "#7a7e9b"
-        }
-      },
-      tokens: get_valid_tokens(this.attrs.tokens)
-    });
+        tokens: get_valid_number(this.attrs.tokens, 0)
+      });
 
-    this.graph.addCell(this.place);
-    this.$emit("mounted", this.place.id);
+      this.graph.addCell(this.place);
+      this.$emit("mounted", this.place.id);
+    }
   },
 
   beforeDestroy() {
