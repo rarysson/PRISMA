@@ -22,7 +22,8 @@ export default {
     },
 
     jointObj: {
-      type: Object
+      type: Object,
+      default: null
     }
   },
 

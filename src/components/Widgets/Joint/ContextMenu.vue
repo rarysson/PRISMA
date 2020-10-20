@@ -29,7 +29,7 @@
       v-model.number="element.weight"
     />
     <div>
-      <button @click="element = null">
+      <button type="button" @click="element = null">
         Cancelar
       </button>
       <button type="submit">

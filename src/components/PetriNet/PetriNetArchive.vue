@@ -7,5 +7,3 @@ export default {
   name: "PetriNetArchive"
 };
 </script>
-
-<style scoped></style>
