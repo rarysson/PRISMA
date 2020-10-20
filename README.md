@@ -12,6 +12,8 @@ Projeto desenvolvido com o intuito de fornecer mais uma opção de ferramenta pa
 
 ## Usando o APP
 
+Para usar online, acesse: https://prisma.rarysson.vercel.app/
+
 Para usar localmente, clone o repositório, vá na pasta criada e execute os comandos:
 
 ```

@@ -11,4 +11,8 @@ function get_formatted_joint_type(type) {
     return t;
 }
 
-export { get_valid_number, get_formatted_joint_type };
+function sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+export { get_valid_number, get_formatted_joint_type, sleep };

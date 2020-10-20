@@ -56,6 +56,7 @@ export default {
     this.paper.on("element:contextmenu", this.handle_context_menu);
     this.paper.on("link:pointerclick", this.handle_element_click);
     this.paper.on("link:contextmenu", this.handle_context_menu);
+    this.$emit("mounted", this.paper);
   },
 
   beforeDestroy() {
