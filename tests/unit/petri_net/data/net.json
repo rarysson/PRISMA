@@ -1,0 +1,147 @@
+{
+	"cells": [
+		{
+			"type": "pn.Place",
+			"size": {
+				"width": 50,
+				"height": 50
+			},
+			"position": {
+				"x": 130,
+				"y": 145
+			},
+			"angle": 0,
+			"tokens": 5,
+			"id": "3cb60d1b-70f0-4574-85dc-4a638b086a1e",
+			"z": 1,
+			"attrs": {
+				".root": {
+					"stroke": "#3a3a3a",
+					"stroke-width": 2
+				},
+				".label": {
+					"fill": "#3a3a3a",
+					"text": "Place 0"
+				},
+				".tokens > circle": {
+					"fill": "#7a7e9b"
+				}
+			}
+		},
+		{
+			"type": "pn.Place",
+			"size": {
+				"width": 50,
+				"height": 50
+			},
+			"position": {
+				"x": 411,
+				"y": 148
+			},
+			"angle": 0,
+			"tokens": 0,
+			"id": "f434638e-f276-470c-94e0-fd9a9176ff42",
+			"z": 2,
+			"attrs": {
+				".root": {
+					"stroke": "#3a3a3a",
+					"stroke-width": 2
+				},
+				".label": {
+					"fill": "#3a3a3a",
+					"text": "Place 1"
+				},
+				".tokens > circle": {
+					"fill": "#7a7e9b"
+				}
+			}
+		},
+		{
+			"type": "pn.Transition",
+			"size": {
+				"width": 12,
+				"height": 50
+			},
+			"position": {
+				"x": 289,
+				"y": 148
+			},
+			"angle": 0,
+			"id": "567af46a-1c2c-4107-88af-b08b35191e5f",
+			"z": 3,
+			"attrs": {
+				".label": {
+					"fill": "#3a3a3a",
+					"text": "Transition 0"
+				},
+				".root": {
+					"fill": "#ffffff",
+					"stroke": "#3a3a3a",
+					"stroke-width": 2
+				}
+			}
+		},
+		{
+			"type": "pn.Link",
+			"source": {
+				"id": "3cb60d1b-70f0-4574-85dc-4a638b086a1e",
+				"selector": ".root"
+			},
+			"target": {
+				"id": "567af46a-1c2c-4107-88af-b08b35191e5f",
+				"selector": ".root"
+			},
+			"weight": 1,
+			"id": "fe2b73e5-5b02-43b3-8753-b2cda93cb8b8",
+			"labels": [
+				{
+					"attrs": {
+						"text": {
+							"text": 1
+						}
+					}
+				}
+			],
+			"z": 4,
+			"attrs": {
+				".connection": {
+					"fill": "none",
+					"stroke-linejoin": "round",
+					"stroke-width": "2",
+					"stroke": "#3a3a3a"
+				}
+			}
+		},
+		{
+			"type": "pn.Link",
+			"source": {
+				"id": "567af46a-1c2c-4107-88af-b08b35191e5f",
+				"selector": ".root"
+			},
+			"target": {
+				"id": "f434638e-f276-470c-94e0-fd9a9176ff42",
+				"selector": ".root"
+			},
+			"weight": 1,
+			"id": "a8e901e2-517e-4171-abc9-e6fb8bdd6104",
+			"labels": [
+				{
+					"attrs": {
+						"text": {
+							"text": 1
+						}
+					}
+				}
+			],
+			"z": 5,
+			"attrs": {
+				".connection": {
+					"fill": "none",
+					"stroke-linejoin": "round",
+					"stroke-width": "2",
+					"stroke": "#3a3a3a"
+				}
+			}
+		}
+	]
+}

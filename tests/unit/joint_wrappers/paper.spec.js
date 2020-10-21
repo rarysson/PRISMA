@@ -25,6 +25,14 @@ describe("Componente JointPaper", () => {
         expect(wrapper.vm.paper).not.toBeNull();
     });
 
+    test("Emite evento mounted", () => {
+        expect(wrapper.emitted().mounted.length).toBe(1);
+    });
+
+    test("Evento mounted retorna um objeto paper", () => {
+        expect(typeof wrapper.emitted().mounted[0][0]).toBe("object");
+    });
+
     test("Paper é destruído", () => {
         wrapper.destroy();
 

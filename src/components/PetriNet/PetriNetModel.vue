@@ -168,7 +168,9 @@ export default {
     },
 
     set_arc(id, type) {
-      this.tmp_arc.push({ id, type });
+      if (type === "place" || type === "transition") {
+        this.tmp_arc.push({ id, type });
+      }
 
       if (this.tmp_arc.length === 2) {
         const source = this.tmp_arc[0];
@@ -260,5 +262,3 @@ export default {
   }
 };
 </script>
-
-<style scoped></style>

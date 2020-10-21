@@ -110,6 +110,8 @@ export default {
     },
 
     change_targets(target_places, time) {
+      let token_set = 0;
+
       target_places.forEach((target) => {
         const token_element = window.joint.V("circle", {
           r: 5,
@@ -120,7 +122,8 @@ export default {
         target.link.findView(this.paper).sendToken(token_element, time);
         setTimeout(() => {
           target.element.set("tokens", tokens + target.weight);
-          this.on_animation = false;
+          token_set++;
+          this.on_animation = token_set !== target_places.length;
         }, time);
       });
     }
