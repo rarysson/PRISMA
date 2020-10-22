@@ -2,6 +2,8 @@
   <div>
     <button @click="set_modal('Open')">Abrir arquivo</button>
     <button @click="set_modal('Export')">Exportar arquivo</button>
+    <button @click="set_modal('Import')">Importar arquivo</button>
+
     <component :is="current_modal" v-model="open_modal" />
   </div>
 </template>
@@ -9,13 +11,15 @@
 <script>
 import ModalOpenFile from "@/components/Widgets/Modal/ModalOpenFile";
 import ModalExportFile from "@/components/Widgets/Modal/ModalExportFile";
+import ModalImportFile from "@/components/Widgets/Modal/ModalImportFile";
 
 export default {
   name: "OptionArchive",
 
   components: {
     ModalOpenFile,
-    ModalExportFile
+    ModalExportFile,
+    ModalImportFile
   },
 
   data() {
