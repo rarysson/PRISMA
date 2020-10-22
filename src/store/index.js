@@ -6,7 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         net: {},
-        net_name: "test"
+        net_name: null
     },
 
     getters: {

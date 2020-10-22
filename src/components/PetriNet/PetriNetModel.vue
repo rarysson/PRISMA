@@ -1,45 +1,48 @@
 <template>
-  <joint-paper
-    v-if="graph !== null"
-    :graph="graph"
-    @blank-click="set_object"
-    @element-click="handle_element_click"
-    @element-contextmenu="handle_element_contextmenu"
-  >
-    <div hidden>
-      <joint-place
-        v-for="(place, i) in places"
-        :key="place.key"
-        :graph="graph"
-        :attrs="place"
-        :joint-obj="places_joint_obj[i]"
-        @mounted="place.id = $event"
-      />
-      <joint-transition
-        v-for="(transition, i) in transitions"
-        :key="transition.key"
-        :graph="graph"
-        :attrs="transition"
-        :joint-obj="transitions_joint_obj[i]"
-        @mounted="transition.id = $event"
-      />
-      <joint-arc
-        v-for="(arc, i) in arcs"
-        :key="arc.link_id"
-        :graph="graph"
-        :attrs="arc"
-        :joint-obj="arcs_joint_obj[i]"
-        @mounted="arc.id = $event"
-      />
-    </div>
-    <template #overlay-elements>
-      <context-menu
-        :data="tmp_element"
-        :position="context_menu_position"
-        @update="update_element"
-      />
-    </template>
-  </joint-paper>
+  <div>
+    <joint-paper
+      v-if="graph !== null"
+      :graph="graph"
+      @blank-click="set_object"
+      @element-click="handle_element_click"
+      @element-contextmenu="handle_element_contextmenu"
+    >
+      <div hidden>
+        <joint-place
+          v-for="(place, i) in places"
+          :key="place.key"
+          :graph="graph"
+          :attrs="place"
+          :joint-obj="places_joint_obj[i]"
+          @mounted="place.id = $event"
+        />
+        <joint-transition
+          v-for="(transition, i) in transitions"
+          :key="transition.key"
+          :graph="graph"
+          :attrs="transition"
+          :joint-obj="transitions_joint_obj[i]"
+          @mounted="transition.id = $event"
+        />
+        <joint-arc
+          v-for="(arc, i) in arcs"
+          :key="arc.link_id"
+          :graph="graph"
+          :attrs="arc"
+          :joint-obj="arcs_joint_obj[i]"
+          @mounted="arc.id = $event"
+        />
+      </div>
+      <template #overlay-elements>
+        <context-menu
+          :data="tmp_element"
+          :position="context_menu_position"
+          @update="update_element"
+        />
+      </template>
+    </joint-paper>
+    <modal-net-name v-model="open_modal" />
+  </div>
 </template>
 
 <script>
@@ -51,6 +54,7 @@ import JointPlace from "@/components/Joint/JointPlace";
 import JointTransition from "@/components/Joint/JointTransition";
 import JointArc from "@/components/Joint/JointArc";
 import ContextMenu from "@/components/Widgets/Joint/ContextMenu";
+import ModalNetName from "@/components/Widgets/Modal/ModalNetName";
 
 export default {
   name: "PetriNetModel",
@@ -67,7 +71,8 @@ export default {
     JointPlace,
     JointTransition,
     JointArc,
-    ContextMenu
+    ContextMenu,
+    ModalNetName
   },
 
   data() {
@@ -87,7 +92,8 @@ export default {
       element_names: {
         names: [],
         need_update: true
-      }
+      },
+      open_modal: false
     };
   },
 
@@ -98,31 +104,39 @@ export default {
       this.graph.fromJSON(this.net);
       this.create_petri_net_from_cells(this.net.cells);
     } else {
-      const data = await db.nets.get(this.net_name);
+      if (this.net_name !== null) {
+        const data = await db.nets.get(this.net_name);
 
-      if (data) {
-        this.graph.fromJSON(data.net);
-        this.create_petri_net_from_cells(data.net.cells);
+        if (data) {
+          this.graph.fromJSON(data.net);
+          this.create_petri_net_from_cells(data.net.cells);
+        }
+      } else {
+        this.open_modal = true;
       }
     }
   },
 
   async beforeDestroy() {
-    this.set_net(this.graph.toJSON());
+    if (JSON.stringify(this.graph.toJSON()) !== JSON.stringify(this.net)) {
+      this.set_net(this.graph.toJSON());
 
-    const data = await db.nets.get(this.net_name);
+      if (this.net_name !== null) {
+        const data = await db.nets.get(this.net_name);
 
-    if (data) {
-      await db.nets.update(this.net_name, {
-        last_update: Date.now(),
-        net: this.net
-      });
-    } else {
-      await db.nets.add({
-        name: this.net_name,
-        last_update: Date.now(),
-        net: this.net
-      });
+        if (data) {
+          await db.nets.update(this.net_name, {
+            last_update: Date.now(),
+            net: this.net
+          });
+        } else {
+          await db.nets.add({
+            name: this.net_name,
+            last_update: Date.now(),
+            net: this.net
+          });
+        }
+      }
     }
   },
 
