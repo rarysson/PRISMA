@@ -1,7 +1,7 @@
-import { mount, createLocalVue } from "@vue/test-utils";
+import { shallowMount, createLocalVue } from "@vue/test-utils";
 import Vuex from "vuex";
 import PetriNetModel from "@/components/PetriNet/PetriNetModel";
-import store_mock from "./data/store";
+import { get_store } from "./data/store";
 import net from "./data/net.json";
 
 const localVue = createLocalVue();
@@ -9,18 +9,19 @@ let wrapper;
 let store;
 const id = "d61d6f96-b520-4e52-9436-14dcdc6a61ea";
 const id_2 = "f52e7c87-a315-9c75-1234-97faedc1f3de";
+const config_data = () => ({
+    store,
+    localVue,
+    propsData: {
+        currentState: ""
+    }
+});
 
 localVue.use(Vuex);
 
 beforeEach(() => {
-    store = new Vuex.Store(global.lodash.cloneDeep(store_mock));
-    wrapper = mount(PetriNetModel, {
-        store,
-        localVue,
-        propsData: {
-            currentState: ""
-        }
-    });
+    store = new Vuex.Store(get_store());
+    wrapper = shallowMount(PetriNetModel, config_data());
 });
 
 afterEach(() => {
@@ -38,7 +39,8 @@ describe("Componente PetriNetModel", () => {
 
     test("Cria a Rede a partir de um objeto JSON", () => {
         store.dispatch("set_net", net);
-        expect(store.getters.net.cells.length).toBeGreaterThan(0);
+        wrapper = shallowMount(PetriNetModel, config_data());
+        expect(wrapper.vm.graph.toJSON().cells.length).toBeGreaterThan(0);
     });
 
     test("Não permite criar um arco para elementos do mesmo tipo", () => {

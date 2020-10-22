@@ -1,6 +1,9 @@
 <template>
   <div class="page-container">
     <v-tabs @change="current_tab = $event">
+      <v-tab title="Arquivo">
+        <option-archive />
+      </v-tab>
       <v-tab title="Modelar">
         <option-model v-model="current_state" />
       </v-tab>
@@ -9,11 +12,7 @@
       </v-tab>
     </v-tabs>
 
-    <petri-net-model
-      v-if="current_tab === 'Modelar'"
-      :current-state="current_state"
-    />
-    <petri-net-simulate v-else-if="current_tab === 'Simular'" />
+    <component :is="get_current_component()" :current-state="current_state" />
   </div>
 </template>
 
@@ -22,8 +21,10 @@ import VTabs from "@/components/Widgets/VTab/VTabs";
 import VTab from "@/components/Widgets/VTab/VTab";
 import OptionModel from "@/components/TabOptions/OptionModel";
 import OptionSimulate from "@/components/TabOptions/OptionSimulate";
+import OptionArchive from "@/components/TabOptions/OptionArchive";
 import PetriNetModel from "@/components/PetriNet/PetriNetModel";
 import PetriNetSimulate from "@/components/PetriNet/PetriNetSimulate";
+import PetriNetArchive from "@/components/PetriNet/PetriNetArchive";
 
 export default {
   name: "Home",
@@ -33,8 +34,10 @@ export default {
     VTab,
     OptionModel,
     OptionSimulate,
+    OptionArchive,
     PetriNetModel,
-    PetriNetSimulate
+    PetriNetSimulate,
+    PetriNetArchive
   },
 
   data() {
@@ -42,6 +45,21 @@ export default {
       current_state: "",
       current_tab: ""
     };
+  },
+
+  methods: {
+    get_current_component() {
+      switch (this.current_tab) {
+        case "Arquivo":
+          return "PetriNetArchive";
+        case "Modelar":
+          return "PetriNetModel";
+        case "Simular":
+          return "PetriNetSimulate";
+        default:
+          return "";
+      }
+    }
   }
 };
 </script>

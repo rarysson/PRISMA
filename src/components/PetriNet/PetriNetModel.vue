@@ -45,6 +45,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { get_formatted_joint_type } from "@/util/funcs";
+import db from "@/util/db";
 import JointPaper from "@/components/Joint/JointPaper";
 import JointPlace from "@/components/Joint/JointPlace";
 import JointTransition from "@/components/Joint/JointTransition";
@@ -90,21 +91,43 @@ export default {
     };
   },
 
-  mounted() {
+  async mounted() {
     this.graph = new window.joint.dia.Graph();
 
     if (!this.is_net_empty) {
       this.graph.fromJSON(this.net);
       this.create_petri_net_from_cells(this.net.cells);
+    } else {
+      const data = await db.nets.get(this.net_name);
+
+      if (data) {
+        this.graph.fromJSON(data.net);
+        this.create_petri_net_from_cells(data.net.cells);
+      }
     }
   },
 
-  beforeDestroy() {
+  async beforeDestroy() {
     this.set_net(this.graph.toJSON());
+
+    const data = await db.nets.get(this.net_name);
+
+    if (data) {
+      await db.nets.update(this.net_name, {
+        last_update: Date.now(),
+        net: this.net
+      });
+    } else {
+      await db.nets.add({
+        name: this.net_name,
+        last_update: Date.now(),
+        net: this.net
+      });
+    }
   },
 
   computed: {
-    ...mapGetters(["is_net_empty", "net"])
+    ...mapGetters(["is_net_empty", "net", "net_name"])
   },
 
   methods: {

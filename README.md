@@ -9,6 +9,7 @@ Projeto desenvolvido com o intuito de fornecer mais uma opção de ferramenta pa
 * [Vue](https://vuejs.org/)
 * [Vuex](https://vuex.vuejs.org/)
 * [JointJS](https://github.com/clientIO/joint)
+* [Dexie.js](https://dexie.org/)
 
 ## Usando o APP
 
