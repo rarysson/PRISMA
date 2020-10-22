@@ -20,7 +20,12 @@ import Modal from "./Modal";
 export default {
   name: "ModalNetName",
 
-  props: ["value"],
+  props: {
+    value: {
+      type: Boolean,
+      required: true
+    }
+  },
 
   components: {
     Modal

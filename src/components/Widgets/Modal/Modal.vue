@@ -12,7 +12,12 @@
 export default {
   name: "Modal",
 
-  props: ["value"],
+  props: {
+    value: {
+      type: Boolean,
+      required: true
+    }
+  },
 
   data() {
     return {

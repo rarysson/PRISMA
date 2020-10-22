@@ -20,7 +20,12 @@ import Modal from "./Modal";
 export default {
   name: "ModalOpenFile",
 
-  props: ["value"],
+  props: {
+    value: {
+      type: Boolean,
+      required: true
+    }
+  },
 
   components: {
     Modal

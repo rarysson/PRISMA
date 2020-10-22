@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-    <v-tabs @change="current_tab = $event">
+    <v-tabs @change="current_tab = $event" :selected="current_tab">
       <v-tab title="Arquivo">
         <option-archive />
       </v-tab>
@@ -12,11 +12,12 @@
       </v-tab>
     </v-tabs>
 
-    <component :is="get_current_component()" :current-state="current_state" />
+    <component :is="current_component" :current-state="current_state" />
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import VTabs from "@/components/Widgets/VTab/VTabs";
 import VTab from "@/components/Widgets/VTab/VTab";
 import OptionModel from "@/components/TabOptions/OptionModel";
@@ -43,8 +44,23 @@ export default {
   data() {
     return {
       current_state: "",
-      current_tab: ""
+      current_tab: "",
+      current_component: "PetriNetArchive"
     };
+  },
+
+  computed: {
+    ...mapGetters(["net_name"])
+  },
+
+  watch: {
+    net_name() {
+      this.current_tab = "Modelar";
+    },
+
+    current_tab() {
+      this.current_component = this.get_current_component();
+    }
   },
 
   methods: {
