@@ -41,6 +41,7 @@
         />
       </template>
     </joint-paper>
+
     <modal-net-name v-model="open_modal" />
   </div>
 </template>
@@ -110,6 +111,7 @@ export default {
         if (data) {
           this.graph.fromJSON(data.net);
           this.create_petri_net_from_cells(data.net.cells);
+          this.set_net(data.net);
         }
       } else {
         this.open_modal = true;
@@ -117,35 +119,30 @@ export default {
     }
   },
 
-  async beforeDestroy() {
-    if (JSON.stringify(this.graph.toJSON()) !== JSON.stringify(this.net)) {
+  beforeDestroy() {
+    if (this.has_net_changed()) {
       this.set_net(this.graph.toJSON());
-
-      if (this.net_name !== null) {
-        const data = await db.nets.get(this.net_name);
-
-        if (data) {
-          await db.nets.update(this.net_name, {
-            last_update: Date.now(),
-            net: this.net
-          });
-        } else {
-          await db.nets.add({
-            name: this.net_name,
-            last_update: Date.now(),
-            net: this.net
-          });
-        }
-      }
     }
   },
 
   computed: {
-    ...mapGetters(["is_net_empty", "net", "net_name"])
+    ...mapGetters(["is_net_empty", "net", "net_name", "need_update_net"])
+  },
+
+  watch: {
+    need_update_net(update) {
+      if (update && this.has_net_changed()) {
+        this.set_net(this.graph.toJSON());
+      }
+    }
   },
 
   methods: {
     ...mapActions(["set_net"]),
+
+    has_net_changed() {
+      return JSON.stringify(this.graph.toJSON()) !== JSON.stringify(this.net);
+    },
 
     create_petri_net_from_cells(cells) {
       cells.forEach((cell) => {

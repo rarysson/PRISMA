@@ -54,7 +54,7 @@ export default {
 
       reader.onload = (event) => {
         this.set_net(JSON.parse(event.target.result));
-        this.set_net_name(this.file.name);
+        this.set_net_name(this.file.name.replace(".prisma", ""));
         this.open = false;
       };
 

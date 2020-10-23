@@ -10,6 +10,9 @@
       <v-tab title="Simular">
         <option-simulate />
       </v-tab>
+      <v-tab title="Configurações">
+        <option-simulate />
+      </v-tab>
     </v-tabs>
 
     <component :is="current_component" :current-state="current_state" />
@@ -23,9 +26,11 @@ import VTab from "@/components/Widgets/VTab/VTab";
 import OptionModel from "@/components/TabOptions/OptionModel";
 import OptionSimulate from "@/components/TabOptions/OptionSimulate";
 import OptionArchive from "@/components/TabOptions/OptionArchive";
+import OptionConfigs from "@/components/TabOptions/OptionConfigs";
 import PetriNetModel from "@/components/PetriNet/PetriNetModel";
 import PetriNetSimulate from "@/components/PetriNet/PetriNetSimulate";
 import PetriNetArchive from "@/components/PetriNet/PetriNetArchive";
+import PetriNetConfig from "@/components/PetriNet/PetriNetConfig";
 
 export default {
   name: "Home",
@@ -36,9 +41,11 @@ export default {
     OptionModel,
     OptionSimulate,
     OptionArchive,
+    OptionConfigs,
     PetriNetModel,
     PetriNetSimulate,
-    PetriNetArchive
+    PetriNetArchive,
+    PetriNetConfig
   },
 
   data() {
@@ -72,6 +79,8 @@ export default {
           return "PetriNetModel";
         case "Simular":
           return "PetriNetSimulate";
+        case "Configurações":
+          return "PetriNetConfig";
         default:
           return "";
       }

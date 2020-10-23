@@ -50,7 +50,7 @@ export default {
     export_file() {
       if (!this.is_net_empty) {
         const file = new File(
-          [JSON.stringify(this.net, null, 2)],
+          [JSON.stringify(this.net)],
           `${this.net_name}.prisma`,
           { type: "text/json;charset=utf-8" }
         );
