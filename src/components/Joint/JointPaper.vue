@@ -22,6 +22,11 @@ export default {
     extraOptions: {
       type: Object,
       default: () => ({})
+    },
+
+    captureMouseMovement: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -56,6 +61,7 @@ export default {
     this.paper.on("element:contextmenu", this.handle_context_menu);
     this.paper.on("link:pointerclick", this.handle_element_click);
     this.paper.on("link:contextmenu", this.handle_context_menu);
+    this.$refs.paper.addEventListener("mousemove", this.handle_mouse_move);
     this.$emit("mounted", this.paper);
   },
 
@@ -65,6 +71,7 @@ export default {
     this.paper.off("element:contextmenu", this.handle_context_menu);
     this.paper.off("link:pointerclick", this.handle_element_click);
     this.paper.off("link:contextmenu", this.handle_context_menu);
+    this.$refs.paper.removeEventListener("mousemove", this.handle_mouse_move);
   },
 
   methods: {
@@ -87,6 +94,31 @@ export default {
       y += this.$refs.paper.offsetTop;
 
       this.$emit("element-contextmenu", { id, type, position: { x, y } });
+    },
+
+    get_x_y_offset(elm) {
+      let x = elm.offsetLeft;
+      let y = elm.offsetTop;
+
+      elm = elm.offsetParent;
+
+      while (elm !== null) {
+        x = parseInt(x) + parseInt(elm.offsetLeft);
+        y = parseInt(y) + parseInt(elm.offsetTop);
+        elm = elm.offsetParent;
+      }
+
+      return { x, y };
+    },
+
+    handle_mouse_move(event) {
+      if (this.captureMouseMovement) {
+        const offset = this.get_x_y_offset(this.$refs.paper);
+        const x = event.pageX - offset.x;
+        const y = event.pageY - offset.y;
+
+        this.$emit("mouse-move", { x, y });
+      }
     }
   }
 };

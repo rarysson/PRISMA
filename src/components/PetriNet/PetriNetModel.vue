@@ -3,9 +3,11 @@
     <joint-paper
       v-if="graph !== null"
       :graph="graph"
+      :capture-mouse-movement="capture_mouse"
       @blank-click="handle_blank_click"
       @element-click="handle_element_click"
       @element-contextmenu="handle_element_contextmenu"
+      @mouse-move="handle_mouse_move"
     >
       <div hidden>
         <joint-place
@@ -88,18 +90,32 @@ export default {
       arcs: [],
       arcs_joint_obj: [],
       tmp_arc: [],
+      follower_tmp_arc: [],
       tmp_element: null,
       context_menu_position: { x: 0, y: 0 },
       element_names: {
         names: [],
         need_update: true
       },
-      open_modal: false
+      open_modal: false,
+      capture_mouse: false
     };
   },
 
   async mounted() {
     this.graph = new window.joint.dia.Graph();
+    this.follower_tmp_arc = new window.joint.shapes.pn.Link({
+      source: {},
+      target: {},
+      attrs: {
+        ".connection": {
+          "fill": "none",
+          "stroke-linejoin": "round",
+          "stroke-width": "2",
+          "stroke": "#3a3a3a"
+        }
+      }
+    });
 
     if (!this.is_net_empty) {
       this.graph.fromJSON(this.net);
@@ -217,6 +233,8 @@ export default {
       }
 
       if (this.tmp_arc.length === 2) {
+        this.capture_mouse = false;
+        this.follower_tmp_arc.remove();
         const source = this.tmp_arc[0];
         const target = this.tmp_arc[1];
 
@@ -236,6 +254,18 @@ export default {
         }
 
         this.tmp_arc = [];
+      } else if (this.tmp_arc.length === 1) {
+        const source = this.tmp_arc[0].id;
+        const position = this.graph.getCell(source).attributes.position;
+        const offset_x = type === "place" ? 75 : 21;
+        this.capture_mouse = true;
+
+        this.follower_tmp_arc.set("source", { id: source });
+        this.follower_tmp_arc.set("target", {
+          x: position.x + offset_x,
+          y: position.y
+        });
+        this.graph.addCell(this.follower_tmp_arc);
       }
     },
 
@@ -302,6 +332,10 @@ export default {
       }
 
       this.tmp_element = null;
+    },
+
+    handle_mouse_move({ x, y }) {
+      this.follower_tmp_arc.set("target", { x, y });
     }
   }
 };
