@@ -3,7 +3,7 @@
     <joint-paper
       v-if="graph !== null"
       :graph="graph"
-      @blank-click="set_object"
+      @blank-click="handle_blank_click"
       @element-click="handle_element_click"
       @element-contextmenu="handle_element_contextmenu"
     >
@@ -184,8 +184,16 @@ export default {
       });
     },
 
-    set_object({ x, y }) {
+    handle_blank_click({ x, y }) {
+      // Aqui eu reduzo os valores de x e y pela metada da largura e altura de cada elemento
+      // Para dessa maneira centralizar o elemento em relação ao mouse do usuário
+      // Lugar => largura: 50, Altura: 50
+      // Transição => largura: 14, Altura: 50
+      y -= 25;
+
       if (this.currentState === "setting_place") {
+        x -= 25;
+
         this.places.push({
           key: `P${this.place_id}`,
           name: `Place ${this.place_id++}`,
@@ -193,6 +201,8 @@ export default {
           tokens: 0
         });
       } else if (this.currentState === "setting_transition") {
+        x -= 7;
+
         this.transitions.push({
           key: `T${this.transition_id}`,
           name: `Transition ${this.transition_id++}`,
