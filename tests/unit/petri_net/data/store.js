@@ -6,7 +6,9 @@ function get_store() {
 
         getters: {
             net: (state) => state.net,
-            is_net_empty: (state) => Object.keys(state.net).length === 0
+            net_name: () => "test",
+            is_net_empty: (state) => Object.keys(state.net).length === 0,
+            need_update_net: () => false
         },
 
         actions: {

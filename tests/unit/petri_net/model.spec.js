@@ -1,5 +1,6 @@
 import { shallowMount, createLocalVue } from "@vue/test-utils";
 import Vuex from "vuex";
+import flushPromises from "flush-promises";
 import PetriNetModel from "@/components/PetriNet/PetriNetModel";
 import { get_store } from "./data/store";
 import net from "./data/net.json";
@@ -19,9 +20,10 @@ const config_data = () => ({
 
 localVue.use(Vuex);
 
-beforeEach(() => {
+beforeEach(async () => {
     store = new Vuex.Store(get_store());
     wrapper = shallowMount(PetriNetModel, config_data());
+    await flushPromises();
 });
 
 afterEach(() => {
