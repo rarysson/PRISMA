@@ -63,9 +63,10 @@ export default {
   },
 
   methods: {
-    ...mapActions(["set_net_name", "set_net"]),
+    ...mapActions(["set_net_name", "empty_net"]),
 
     submit_net_name() {
+      this.empty_net();
       this.set_net_name(this.net_name);
       this.open = false;
     }

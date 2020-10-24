@@ -10,7 +10,6 @@
 
 <script>
 import { mapActions } from "vuex";
-// import db from "@/util/db";
 import Modal from "./Modal";
 
 export default {

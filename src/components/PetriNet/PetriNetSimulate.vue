@@ -10,7 +10,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { sleep /*, get_formatted_joint_type*/ } from "@/util/funcs";
+import { sleep, get_formatted_joint_type } from "@/util/funcs";
 import JointPaper from "@/components/Joint/JointPaper";
 
 export default {
@@ -33,11 +33,7 @@ export default {
 
     if (!this.is_net_empty) {
       this.graph.fromJSON(this.net);
-      // this.net.cells.forEach((cell) => {
-      //   if (get_formatted_joint_type(cell.type) === "transition") {
-      //     console.log(cell);
-      //   }
-      // });
+      this.change_transitions_color(this.net.cells);
     }
   },
 
@@ -49,41 +45,35 @@ export default {
     handle_element_click({ id, type }) {
       if (type === "transition" && !this.on_animation) {
         const links = this.graph.getConnectedLinks(this.graph.getCell(id));
-        const source_places = [];
-        const target_places = [];
-
-        links.forEach((link) => {
-          if (link.attributes.target.id === id) {
-            source_places.push({
-              weight: link.attributes.weight,
-              element: this.graph.getCell(link.attributes.source.id),
-              link
-            });
-          } else if (link.attributes.source.id === id) {
-            target_places.push({
-              weight: link.attributes.weight,
-              element: this.graph.getCell(link.attributes.target.id),
-              link
-            });
-          }
-        });
+        const source_places = this.get_source_places(links, id);
+        const target_places = this.get_target_places(links, id);
 
         this.change_petri_net_state(source_places, target_places);
       }
     },
 
+    get_source_places(links, id) {
+      return links
+        .filter((link) => link.attributes.target.id === id)
+        .map((link) => ({
+          weight: link.attributes.weight,
+          element: this.graph.getCell(link.attributes.source.id),
+          link
+        }));
+    },
+
+    get_target_places(links, id) {
+      return links
+        .filter((link) => link.attributes.source.id === id)
+        .map((link) => ({
+          weight: link.attributes.weight,
+          element: this.graph.getCell(link.attributes.target.id),
+          link
+        }));
+    },
+
     async change_petri_net_state(source_places, target_places) {
-      let fired_sources = 0;
-
-      source_places.forEach((source) => {
-        const tokens = source.element.get("tokens");
-
-        if (source.weight <= tokens) {
-          fired_sources++;
-        }
-      });
-
-      if (fired_sources === source_places.length) {
+      if (this.can_fire_transition(source_places)) {
         this.on_animation = true;
         const time = 500;
 
@@ -95,10 +85,27 @@ export default {
 
         if (target_places.length > 0) {
           this.change_targets(target_places, time);
+          await sleep(time);
         } else {
           this.on_animation = false;
         }
+
+        this.change_transitions_color(this.graph.toJSON().cells);
       }
+    },
+
+    can_fire_transition(sources) {
+      let fired_sources = 0;
+
+      sources.forEach((source) => {
+        const tokens = source.element.get("tokens");
+
+        if (source.weight <= tokens) {
+          fired_sources++;
+        }
+      });
+
+      return fired_sources === sources.length;
     },
 
     change_sources(source_places, time) {
@@ -130,6 +137,22 @@ export default {
           token_set++;
           this.on_animation = token_set !== target_places.length;
         }, time);
+      });
+    },
+
+    change_transitions_color(cells) {
+      cells.forEach((cell) => {
+        if (get_formatted_joint_type(cell.type) === "transition") {
+          const links = this.graph.getConnectedLinks(cell);
+          const sources = this.get_source_places(links, cell.id);
+          const transition = this.graph.getCell(cell.id);
+
+          if (this.can_fire_transition(sources)) {
+            transition.attr(".root/fill", "#28a745");
+          } else {
+            transition.attr(".root/fill", "#ffffff");
+          }
+        }
       });
     }
   }

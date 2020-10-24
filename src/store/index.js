@@ -39,6 +39,10 @@ export default new Vuex.Store({
 
         set_save_config({ commit }, config) {
             commit("set_save_config", config);
+        },
+
+        empty_net({ commit }) {
+            commit("set_net", {});
         }
     },
 
