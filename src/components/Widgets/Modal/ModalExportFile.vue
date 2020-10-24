@@ -1,7 +1,7 @@
 <template>
   <modal v-model="open">
     <form @submit.prevent="export_file">
-      <button @click="open = false">cancelar</button>
+      <button type="button" @click="open = false">cancelar</button>
       <button type="submit">Exportar como .prisma</button>
     </form>
   </modal>
@@ -54,6 +54,7 @@ export default {
           `${this.net_name}.prisma`,
           { type: "text/json;charset=utf-8" }
         );
+
         file_saver.saveAs(file);
       }
 

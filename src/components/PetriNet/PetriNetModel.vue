@@ -104,15 +104,16 @@ export default {
 
   async mounted() {
     this.graph = new window.joint.dia.Graph();
-    this.follower_tmp_arc = new window.joint.shapes.pn.Link({
+    this.follower_tmp_arc = new window.joint.shapes.standard.Link({
       source: {},
       target: {},
       attrs: {
-        ".connection": {
+        root: {
           "fill": "none",
           "stroke-linejoin": "round",
           "stroke-width": "2",
-          "stroke": "#3a3a3a"
+          "stroke": "#3a3a3a",
+          "pointer-events": "none"
         }
       }
     });
@@ -227,58 +228,6 @@ export default {
       }
     },
 
-    set_arc(id, type) {
-      if (type === "place" || type === "transition") {
-        this.tmp_arc.push({ id, type });
-      }
-
-      if (this.tmp_arc.length === 2) {
-        this.capture_mouse = false;
-        this.follower_tmp_arc.remove();
-        const source = this.tmp_arc[0];
-        const target = this.tmp_arc[1];
-
-        if (source.type !== target.type) {
-          const has_arc = this.arcs.some(
-            (arc) => arc.source === source.id && arc.target === target.id
-          );
-
-          if (!has_arc) {
-            this.arcs.push({
-              link_id: source.id + target.id,
-              source: source.id,
-              target: target.id,
-              weight: 1
-            });
-          }
-        }
-
-        this.tmp_arc = [];
-      } else if (this.tmp_arc.length === 1) {
-        const source = this.tmp_arc[0].id;
-        const position = this.graph.getCell(source).attributes.position;
-        const offset_x = type === "place" ? 75 : 21;
-        this.capture_mouse = true;
-
-        this.follower_tmp_arc.set("source", { id: source });
-        this.follower_tmp_arc.set("target", {
-          x: position.x + offset_x,
-          y: position.y
-        });
-        this.graph.addCell(this.follower_tmp_arc);
-      }
-    },
-
-    change_token(id) {
-      const place = this.places.find((place) => place.id === id);
-
-      if (this.currentState === "setting_token") {
-        place.tokens++;
-      } else if (this.currentState === "removing_token" && place.tokens > 0) {
-        place.tokens--;
-      }
-    },
-
     handle_element_click({ id, type }) {
       if (this.currentState === "setting_arc") {
         this.set_arc(id, type);
@@ -295,17 +244,80 @@ export default {
       }
     },
 
+    change_token(id) {
+      const place = this.places.find((place) => place.id === id);
+
+      if (this.currentState === "setting_token") {
+        place.tokens++;
+      } else if (this.currentState === "removing_token" && place.tokens > 0) {
+        place.tokens--;
+      }
+    },
+
+    set_arc(id, type) {
+      if (type === "place" || type === "transition") {
+        // Evita de criar uma conexão com o mesmo objeto
+        if (this.tmp_arc.length === 1) {
+          const source_id = this.tmp_arc[0].id;
+
+          if (source_id !== id) {
+            this.tmp_arc.push({ id, type });
+          }
+        } else {
+          this.tmp_arc.push({ id, type });
+        }
+      }
+
+      if (this.tmp_arc.length === 2) {
+        this.create_arc();
+      } else if (this.tmp_arc.length === 1) {
+        this.create_follower_tmp_arc(type);
+      }
+    },
+
+    create_arc() {
+      this.capture_mouse = false;
+      this.follower_tmp_arc.remove();
+      const source = this.tmp_arc[0];
+      const target = this.tmp_arc[1];
+
+      if (source.type !== target.type) {
+        const has_arc = this.arcs.some(
+          (arc) => arc.source === source.id && arc.target === target.id
+        );
+
+        if (!has_arc) {
+          this.arcs.push({
+            link_id: source.id + target.id,
+            source: source.id,
+            target: target.id,
+            weight: 1
+          });
+        }
+      }
+
+      this.tmp_arc = [];
+    },
+
+    create_follower_tmp_arc(type) {
+      const source = this.tmp_arc[0].id;
+      const position = this.graph.getCell(source).attributes.position;
+      const offset_x = type === "place" ? 75 : 21;
+      this.capture_mouse = true;
+
+      this.follower_tmp_arc.set("source", { id: source });
+      this.follower_tmp_arc.set("target", {
+        x: position.x + offset_x,
+        y: position.y
+      });
+      this.graph.addCell(this.follower_tmp_arc);
+    },
+
     handle_element_contextmenu({ id, type, position }) {
       const key = `${type}s`;
       const index = this[key].findIndex((el) => el.id === id);
       this.tmp_element = { index, type, ...this[key][index] };
       this.context_menu_position = position;
-    },
-
-    reset_list_name() {
-      this.element_names.names = [];
-      this.element_names.names.push(...this.places.map((p) => p.name));
-      this.element_names.names.push(...this.transitions.map((t) => t.name));
     },
 
     update_element() {
@@ -332,6 +344,12 @@ export default {
       }
 
       this.tmp_element = null;
+    },
+
+    reset_list_name() {
+      this.element_names.names = [];
+      this.element_names.names.push(...this.places.map((p) => p.name));
+      this.element_names.names.push(...this.transitions.map((t) => t.name));
     },
 
     handle_mouse_move({ x, y }) {

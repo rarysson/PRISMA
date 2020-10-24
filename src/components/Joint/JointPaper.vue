@@ -96,7 +96,17 @@ export default {
       this.$emit("element-contextmenu", { id, type, position: { x, y } });
     },
 
-    get_x_y_offset(elm) {
+    handle_mouse_move(event) {
+      if (this.captureMouseMovement) {
+        const offset = this.get_parent_offset(this.$refs.paper);
+        const x = event.pageX - offset.x;
+        const y = event.pageY - offset.y;
+
+        this.$emit("mouse-move", { x, y });
+      }
+    },
+
+    get_parent_offset(elm) {
       let x = elm.offsetLeft;
       let y = elm.offsetTop;
 
@@ -109,16 +119,6 @@ export default {
       }
 
       return { x, y };
-    },
-
-    handle_mouse_move(event) {
-      if (this.captureMouseMovement) {
-        const offset = this.get_x_y_offset(this.$refs.paper);
-        const x = event.pageX - offset.x;
-        const y = event.pageY - offset.y;
-
-        this.$emit("mouse-move", { x, y });
-      }
     }
   }
 };

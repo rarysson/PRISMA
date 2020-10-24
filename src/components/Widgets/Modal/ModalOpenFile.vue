@@ -66,7 +66,6 @@ export default {
     ...mapActions(["set_net_name", "set_net"]),
 
     submit_net_name() {
-      this.set_net({});
       this.set_net_name(this.net_name);
       this.open = false;
     }

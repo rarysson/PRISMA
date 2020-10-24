@@ -2,7 +2,7 @@
   <modal v-model="open">
     <form @submit.prevent="submit_import">
       <input type="file" accept=".prisma" required @change="load_file" />
-      <button type="buttom" @click="open = false">cancelar</button>
+      <button type="button" @click="open = false">cancelar</button>
       <button type="submit">importar</button>
     </form>
   </modal>
@@ -59,7 +59,7 @@ export default {
       };
 
       reader.onerror = () => {
-        console.log("erro ao ler arquivo");
+        console.log("Erro ao ler arquivo");
       };
     },
 

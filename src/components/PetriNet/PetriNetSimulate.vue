@@ -10,7 +10,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { sleep } from "@/util/funcs";
+import { sleep /*, get_formatted_joint_type*/ } from "@/util/funcs";
 import JointPaper from "@/components/Joint/JointPaper";
 
 export default {
@@ -33,6 +33,11 @@ export default {
 
     if (!this.is_net_empty) {
       this.graph.fromJSON(this.net);
+      // this.net.cells.forEach((cell) => {
+      //   if (get_formatted_joint_type(cell.type) === "transition") {
+      //     console.log(cell);
+      //   }
+      // });
     }
   },
 
