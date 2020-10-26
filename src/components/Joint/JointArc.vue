@@ -48,6 +48,9 @@ export default {
             "stroke-linejoin": "round",
             "stroke-width": "2",
             "stroke": "#3a3a3a"
+          },
+          ".link-tools": {
+            display: "none"
           }
         },
         weight
