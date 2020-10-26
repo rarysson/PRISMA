@@ -4,6 +4,8 @@
       v-if="graph !== null"
       :graph="graph"
       :capture-mouse-movement="capture_mouse"
+      :freeze-dimensions="currentState !== ''"
+      :save-dimensions-before-destroy="true"
       @blank-click="handle_blank_click"
       @element-click="handle_element_click"
       @element-contextmenu="handle_element_contextmenu"
@@ -129,6 +131,7 @@ export default {
           this.graph.fromJSON(data.net);
           this.create_petri_net_from_cells(data.net.cells);
           this.set_net(data.net);
+          this.set_paper_dimensions(data.paper_dimensions);
         }
       } else {
         this.open_modal = true;
@@ -155,7 +158,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["set_net"]),
+    ...mapActions(["set_net", "set_paper_dimensions"]),
 
     has_net_changed() {
       return JSON.stringify(this.graph.toJSON()) !== JSON.stringify(this.net);

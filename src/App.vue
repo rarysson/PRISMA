@@ -13,10 +13,13 @@ export default {
 <style>
 @import url("~@/styles/reset.css");
 
+body {
+  background-color: whitesmoke;
+}
+
 #app {
   position: relative;
   z-index: 0;
   min-height: 100vh;
-  background-color: whitesmoke;
 }
 </style>

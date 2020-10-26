@@ -31,13 +31,12 @@
       </button>
     </fieldset>
 
-    <button @click="save_net">Salvar arquivo</button>
+    <save-net-btn />
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import db from "@/util/db";
+import SaveNetBtn from "@/components/Widgets/SaveNetBtn";
 
 export default {
   name: "OptionModel",
@@ -47,6 +46,10 @@ export default {
       type: String,
       required: true
     }
+  },
+
+  components: {
+    SaveNetBtn
   },
 
   data() {
@@ -62,60 +65,17 @@ export default {
         removing_transition: false,
         removing_arc: false,
         removing_token: false
-      },
-      id_interval: null
+      }
     };
   },
 
   watch: {
     current_state() {
       this.$emit("input", this.current_state);
-    },
-
-    save_config() {
-      const { auto_save, delay } = this.save_config;
-
-      if (auto_save) {
-        this.id_interval = setInterval(() => {
-          console.log("salvando automaticamente");
-          this.save_net();
-        }, delay * 1000);
-      } else {
-        clearInterval(this.id_interval);
-      }
     }
   },
 
-  computed: {
-    ...mapGetters(["is_net_empty", "net", "net_name", "save_config"])
-  },
-
   methods: {
-    ...mapActions(["request_net_update"]),
-
-    async save_net() {
-      this.request_net_update(true);
-
-      if (this.net_name !== null) {
-        const data = await db.nets.get(this.net_name);
-
-        if (data) {
-          await db.nets.update(this.net_name, {
-            last_update: Date.now(),
-            net: this.net
-          });
-        } else {
-          await db.nets.add({
-            name: this.net_name,
-            last_update: Date.now(),
-            net: this.net
-          });
-        }
-      }
-
-      this.request_net_update(false);
-    },
-
     toggle_state(state, event) {
       this.last_element?.classList.remove("active");
       event.target.classList.add("active");

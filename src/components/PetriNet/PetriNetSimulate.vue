@@ -3,6 +3,7 @@
     v-if="graph !== null"
     :graph="graph"
     :extra-options="{ interactive: false }"
+    :freeze-dimensions="true"
     @element-click="handle_element_click"
     @mounted="paper = $event"
   />
