@@ -95,9 +95,7 @@ export default {
     },
 
     change_net_state(data) {
-      if (data.type === "backward") {
-        this.$refs.net.revert_net_state();
-      }
+      this.$refs.net.revert_net_state(data);
     }
   }
 };

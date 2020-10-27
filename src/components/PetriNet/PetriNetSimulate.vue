@@ -54,6 +54,10 @@ export default {
         this.change_net_state(source_places, target_places);
 
         this.backwards_index++;
+        this.fired_transitions = this.fired_transitions.slice(
+          0,
+          this.backwards_index
+        );
         this.fired_transitions[this.backwards_index] = id;
       }
     },
@@ -78,8 +82,8 @@ export default {
         }));
     },
 
-    revert_net_state() {
-      if (this.backwards_index >= 0) {
+    revert_net_state(data) {
+      if (data.type === "backward" && this.backwards_index >= 0) {
         const id = this.fired_transitions[this.backwards_index];
         const links = this.graph.getConnectedLinks(this.graph.getCell(id));
         const source_places = this.get_source_places(links, id);
@@ -87,6 +91,17 @@ export default {
 
         this.change_net_state(target_places, source_places, "reverse");
         this.backwards_index--;
+      } else if (
+        data.type === "forward" &&
+        this.backwards_index < this.fired_transitions.length - 1
+      ) {
+        this.backwards_index++;
+        const id = this.fired_transitions[this.backwards_index];
+        const links = this.graph.getConnectedLinks(this.graph.getCell(id));
+        const source_places = this.get_source_places(links, id);
+        const target_places = this.get_target_places(links, id);
+
+        this.change_net_state(source_places, target_places);
       }
     },
 
