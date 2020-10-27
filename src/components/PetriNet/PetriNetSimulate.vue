@@ -25,7 +25,9 @@ export default {
     return {
       graph: null,
       paper: null,
-      on_animation: false
+      on_animation: false,
+      fired_transitions: [],
+      backwards_index: -1
     };
   },
 
@@ -49,7 +51,10 @@ export default {
         const source_places = this.get_source_places(links, id);
         const target_places = this.get_target_places(links, id);
 
-        this.change_petri_net_state(source_places, target_places);
+        this.change_net_state(source_places, target_places);
+
+        this.backwards_index++;
+        this.fired_transitions[this.backwards_index] = id;
       }
     },
 
@@ -73,19 +78,31 @@ export default {
         }));
     },
 
-    async change_petri_net_state(source_places, target_places) {
+    revert_net_state() {
+      if (this.backwards_index >= 0) {
+        const id = this.fired_transitions[this.backwards_index];
+        const links = this.graph.getConnectedLinks(this.graph.getCell(id));
+        const source_places = this.get_source_places(links, id);
+        const target_places = this.get_target_places(links, id);
+
+        this.change_net_state(target_places, source_places, "reverse");
+        this.backwards_index--;
+      }
+    },
+
+    async change_net_state(source_places, target_places, direction) {
       if (this.can_fire_transition(source_places)) {
         this.on_animation = true;
         const time = 500;
 
-        this.change_sources(source_places, time);
+        this.change_sources(source_places, time, direction);
 
         if (source_places.length > 0) {
           await sleep(time);
         }
 
         if (target_places.length > 0) {
-          this.change_targets(target_places, time);
+          this.change_targets(target_places, time, direction);
           await sleep(time);
         } else {
           this.on_animation = false;
@@ -109,7 +126,7 @@ export default {
       return fired_sources === sources.length;
     },
 
-    change_sources(source_places, time) {
+    change_sources(source_places, time, direction = "normal") {
       source_places.forEach((source) => {
         const token_element = window.joint.V("circle", {
           r: 5,
@@ -118,11 +135,13 @@ export default {
         const tokens = source.element.get("tokens");
 
         source.element.set("tokens", tokens - source.weight);
-        source.link.findView(this.paper).sendToken(token_element, time);
+        source.link
+          .findView(this.paper)
+          .sendToken(token_element, { duration: time, direction });
       });
     },
 
-    change_targets(target_places, time) {
+    change_targets(target_places, time, direction = "normal") {
       let token_set = 0;
 
       target_places.forEach((target) => {
@@ -132,12 +151,13 @@ export default {
         });
         const tokens = target.element.get("tokens");
 
-        target.link.findView(this.paper).sendToken(token_element, time);
-        setTimeout(() => {
-          target.element.set("tokens", tokens + target.weight);
-          token_set++;
-          this.on_animation = token_set !== target_places.length;
-        }, time);
+        target.link
+          .findView(this.paper)
+          .sendToken(token_element, { duration: time, direction }, () => {
+            target.element.set("tokens", tokens + target.weight);
+            token_set++;
+            this.on_animation = token_set !== target_places.length;
+          });
       });
     },
 

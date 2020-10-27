@@ -84,3 +84,9 @@ export default {
   }
 };
 </script>
+
+<style>
+.link-tools .tool-remove {
+  display: none;
+}
+</style>

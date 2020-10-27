@@ -12,14 +12,18 @@
         <option-model v-model="current_state" />
       </v-tab>
       <v-tab title="Simular">
-        <option-simulate />
+        <option-simulate @click="change_net_state" />
       </v-tab>
       <v-tab title="Configurações">
-        <option-simulate />
+        <option-configs />
       </v-tab>
     </v-tabs>
 
-    <component :is="current_component" :current-state="current_state" />
+    <component
+      :is="current_component"
+      :current-state="current_state"
+      ref="net"
+    />
   </div>
 </template>
 
@@ -87,6 +91,12 @@ export default {
           return "PetriNetConfig";
         default:
           return "";
+      }
+    },
+
+    change_net_state(data) {
+      if (data.type === "backward") {
+        this.$refs.net.revert_net_state();
       }
     }
   }
