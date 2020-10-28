@@ -33,7 +33,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["is_net_empty", "net", "net_name"])
+    ...mapGetters(["is_net_empty", "net", "net_name", "paper_dimensions"])
   },
 
   watch: {
@@ -50,7 +50,12 @@ export default {
     export_file() {
       if (!this.is_net_empty) {
         const file = new File(
-          [JSON.stringify(this.net)],
+          [
+            JSON.stringify({
+              ...this.net,
+              paper_dimensions: this.paper_dimensions
+            })
+          ],
           `${this.net_name}.prisma`,
           { type: "text/json;charset=utf-8" }
         );

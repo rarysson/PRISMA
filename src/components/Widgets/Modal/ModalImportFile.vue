@@ -10,6 +10,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import db from "@/util/db";
 import Modal from "./Modal";
 
 export default {
@@ -44,17 +45,34 @@ export default {
   },
 
   methods: {
-    ...mapActions(["set_net_name", "set_net"]),
+    ...mapActions(["set_net_name", "set_net", "set_paper_dimensions"]),
 
     submit_import() {
       const reader = new FileReader();
 
       reader.readAsText(this.file);
 
-      reader.onload = (event) => {
-        this.set_net(JSON.parse(event.target.result));
-        this.set_net_name(this.file.name.replace(".prisma", ""));
-        this.open = false;
+      reader.onload = async (event) => {
+        try {
+          const data = await db.nets.toArray();
+          const names = data.map((i) => i.name);
+          const name = this.file.name.replace(".prisma", "");
+          const obj = JSON.parse(event.target.result);
+
+          if (names.includes(name)) {
+            console.warn(
+              `Já existe uma Rede com esse nome.
+              Caso não queira perder os dados da rede antiga, mude o nome do arquivo e importe novamente.`
+            );
+          }
+
+          this.set_net(obj);
+          this.set_paper_dimensions(obj.paper_dimensions);
+          this.set_net_name(name);
+          this.open = false;
+        } catch (error) {
+          console.log(error);
+        }
       };
 
       reader.onerror = () => {

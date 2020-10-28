@@ -28,7 +28,8 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import db from "@/util/db";
 import VTabs from "@/components/Widgets/VTab/VTabs";
 import VTab from "@/components/Widgets/VTab/VTab";
 import OptionModel from "@/components/TabOptions/OptionModel";
@@ -64,6 +65,16 @@ export default {
     };
   },
 
+  async mounted() {
+    const data = await db.configs.get("save");
+
+    if (data) {
+      const { auto_save, delay } = data;
+
+      this.set_save_config({ auto_save, delay });
+    }
+  },
+
   computed: {
     ...mapGetters(["net_name"])
   },
@@ -79,6 +90,8 @@ export default {
   },
 
   methods: {
+    ...mapActions(["set_save_config"]),
+
     get_current_component() {
       switch (this.current_tab) {
         case "Arquivo":

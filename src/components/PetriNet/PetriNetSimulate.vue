@@ -118,15 +118,17 @@ export default {
 
         if (this.can_fire_transition(source_places)) {
           const target_places = this.get_target_places(links, id);
+          // eslint-disable-next-line no-await-in-loop
           await this.change_net_state(source_places, target_places, {
             time: data.time
           });
-          data.steps--;
           triggered = true;
           this.transition_triggered(id);
           break;
         }
       }
+
+      data.steps--;
 
       if (data.steps > 0 && triggered) {
         this.random_state(data);

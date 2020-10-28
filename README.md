@@ -1,4 +1,4 @@
-# PRISMA - Petri net Simulation and Modeling
+# PRISMA - Petri Net Simulation and Modeling
 
 PRISMA é um Modelador e Simulador de Redes de Petri.
 

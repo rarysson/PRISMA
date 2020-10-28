@@ -125,13 +125,17 @@ export default {
       this.create_petri_net_from_cells(this.net.cells);
     } else {
       if (this.net_name !== null) {
-        const data = await db.nets.get(this.net_name);
+        try {
+          const data = await db.nets.get(this.net_name);
 
-        if (data) {
-          this.graph.fromJSON(data.net);
-          this.create_petri_net_from_cells(data.net.cells);
-          this.set_net(data.net);
-          this.set_paper_dimensions(data.paper_dimensions);
+          if (data) {
+            this.graph.fromJSON(data.net);
+            this.create_petri_net_from_cells(data.net.cells);
+            this.set_net(data.net);
+            this.set_paper_dimensions(data.paper_dimensions);
+          }
+        } catch (error) {
+          console.log(error);
         }
       } else {
         this.open_modal = true;

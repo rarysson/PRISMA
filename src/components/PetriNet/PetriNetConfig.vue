@@ -20,7 +20,8 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+import db from "@/util/db";
 
 export default {
   name: "PetriNetConfig",
@@ -32,11 +33,39 @@ export default {
     };
   },
 
+  mounted() {
+    const { auto_save, delay } = this.save_config;
+
+    this.auto_save = auto_save;
+    this.delay = delay;
+  },
+
+  computed: {
+    ...mapGetters(["save_config"])
+  },
+
   methods: {
     ...mapActions(["set_save_config"]),
 
-    change_config() {
-      this.set_save_config({ auto_save: this.auto_save, delay: this.delay });
+    async change_config() {
+      const config = { auto_save: this.auto_save, delay: this.delay };
+
+      this.set_save_config(config);
+
+      try {
+        const data = await db.configs.get("save");
+
+        if (data) {
+          await db.configs.update("save", config);
+        } else {
+          await db.configs.add({
+            name: "save",
+            ...config
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 };
