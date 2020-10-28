@@ -12,7 +12,7 @@
         <option-model v-model="current_state" />
       </v-tab>
       <v-tab title="Simular">
-        <option-simulate @click="change_net_state" />
+        <option-simulate @change="change_net_state" />
       </v-tab>
       <v-tab title="Configurações">
         <option-configs />
@@ -95,7 +95,11 @@ export default {
     },
 
     change_net_state(data) {
-      this.$refs.net.revert_net_state(data);
+      if (data.type === "forward" && data.steps > 1) {
+        this.$refs.net.random_state(data);
+      } else {
+        this.$refs.net.revert_net_state(data);
+      }
     }
   }
 };

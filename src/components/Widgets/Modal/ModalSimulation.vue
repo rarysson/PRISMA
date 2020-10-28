@@ -1,24 +1,23 @@
 <template>
   <modal v-model="open">
-    <form @submit.prevent="submit_net_name">
-      <input
-        type="text"
-        v-model.trim="net_name"
-        placeholder="nome da rede"
-        required
-      />
+    <form @submit.prevent="submit">
+      <label for="steps">Insira o número de passos</label>
+      <input type="number" id="steps" min="1" v-model.number="steps" required />
+
+      <input type="checkbox" id="skip" v-model="skip_animation" />
+      <label for="skip">Desativar animação durante o processo</label>
+
+      <button type="button" @click="open = false">cancelar</button>
       <button type="submit">confirmar</button>
     </form>
   </modal>
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import db from "@/util/db";
 import Modal from "./Modal";
 
 export default {
-  name: "ModalNetName",
+  name: "ModalSimulation",
 
   props: {
     value: {
@@ -34,7 +33,8 @@ export default {
   data() {
     return {
       open: this.value,
-      net_name: null
+      steps: 1,
+      skip_animation: false
     };
   },
 
@@ -49,19 +49,11 @@ export default {
   },
 
   methods: {
-    ...mapActions(["set_net_name"]),
-
-    async submit_net_name() {
-      try {
-        const data = await db.nets.get(this.net_name);
-
-        if (!data) {
-          this.set_net_name(this.net_name);
-          this.open = false;
-        }
-      } catch (error) {
-        console.log(error);
-      }
+    submit() {
+      this.$emit("change", {
+        steps: this.steps,
+        skip_animation: this.skip_animation
+      });
     }
   }
 };
@@ -69,8 +61,8 @@ export default {
 
 <style scoped>
 /deep/ .modal {
-  width: 500px;
-  height: 200px;
+  width: 550px;
+  height: 350px;
   background-color: whitesmoke;
   padding: 3%;
 }

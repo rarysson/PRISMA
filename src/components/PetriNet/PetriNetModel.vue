@@ -46,7 +46,7 @@
       </template>
     </joint-paper>
 
-    <modal-net-name v-model="open_modal" />
+    <modal-create-net v-model="open_modal" />
   </div>
 </template>
 
@@ -59,7 +59,7 @@ import JointPlace from "@/components/Joint/JointPlace";
 import JointTransition from "@/components/Joint/JointTransition";
 import JointArc from "@/components/Joint/JointArc";
 import ContextMenu from "@/components/Widgets/Joint/ContextMenu";
-import ModalNetName from "@/components/Widgets/Modal/ModalNetName";
+import ModalCreateNet from "@/components/Widgets/Modal/ModalCreateNet";
 
 export default {
   name: "PetriNetModel",
@@ -77,7 +77,7 @@ export default {
     JointTransition,
     JointArc,
     ContextMenu,
-    ModalNetName
+    ModalCreateNet
   },
 
   data() {

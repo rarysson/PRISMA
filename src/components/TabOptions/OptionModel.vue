@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import SaveNetBtn from "@/components/Widgets/SaveNetBtn";
+import SaveNetBtn from "@/components/Widgets/OptionModel/SaveNetBtn";
 
 export default {
   name: "OptionModel",

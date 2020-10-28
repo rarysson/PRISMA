@@ -14,6 +14,21 @@ import { mapGetters } from "vuex";
 import { sleep, get_formatted_joint_type } from "@/util/funcs";
 import JointPaper from "@/components/Joint/JointPaper";
 
+function shuffle_array(array) {
+  let tmp_value, random_index;
+  let current_index = array.length;
+
+  while (current_index !== 0) {
+    random_index = Math.floor(Math.random() * current_index);
+    current_index -= 1;
+    tmp_value = array[current_index];
+    array[current_index] = array[random_index];
+    array[random_index] = tmp_value;
+  }
+
+  return array;
+}
+
 export default {
   name: "PetriNetSimulate",
 
@@ -27,7 +42,8 @@ export default {
       paper: null,
       on_animation: false,
       fired_transitions: [],
-      backwards_index: -1
+      backwards_index: -1,
+      transitions: []
     };
   },
 
@@ -37,6 +53,12 @@ export default {
     if (!this.is_net_empty) {
       this.graph.fromJSON(this.net);
       this.change_transitions_color(this.net.cells);
+      this.transitions = this.graph
+        .getCells()
+        .filter(
+          (cell) =>
+            get_formatted_joint_type(cell.attributes.type) === "transition"
+        );
     }
   },
 
@@ -52,13 +74,7 @@ export default {
         const target_places = this.get_target_places(links, id);
 
         this.change_net_state(source_places, target_places);
-
-        this.backwards_index++;
-        this.fired_transitions = this.fired_transitions.slice(
-          0,
-          this.backwards_index
-        );
-        this.fired_transitions[this.backwards_index] = id;
+        this.transition_triggered(id);
       }
     },
 
@@ -82,42 +98,92 @@ export default {
         }));
     },
 
-    revert_net_state(data) {
+    transition_triggered(id) {
+      this.backwards_index++;
+      this.fired_transitions = this.fired_transitions.slice(
+        0,
+        this.backwards_index
+      );
+      this.fired_transitions[this.backwards_index] = id;
+    },
+
+    async random_state(data) {
+      let triggered = false;
+      const tmp_transitions = shuffle_array(this.transitions);
+
+      for (let i = 0; i < tmp_transitions.length; i++) {
+        const id = tmp_transitions[i].id;
+        const links = this.graph.getConnectedLinks(this.graph.getCell(id));
+        const source_places = this.get_source_places(links, id);
+
+        if (this.can_fire_transition(source_places)) {
+          const target_places = this.get_target_places(links, id);
+          await this.change_net_state(source_places, target_places, {
+            time: data.time
+          });
+          data.steps--;
+          triggered = true;
+          this.transition_triggered(id);
+          break;
+        }
+      }
+
+      if (data.steps > 0 && triggered) {
+        this.random_state(data);
+      }
+    },
+
+    async revert_net_state(data) {
+      let triggered = false;
+
       if (data.type === "backward" && this.backwards_index >= 0) {
+        triggered = true;
         const id = this.fired_transitions[this.backwards_index];
         const links = this.graph.getConnectedLinks(this.graph.getCell(id));
         const source_places = this.get_source_places(links, id);
         const target_places = this.get_target_places(links, id);
 
-        this.change_net_state(target_places, source_places, "reverse");
+        await this.change_net_state(target_places, source_places, {
+          time: data.time,
+          direction: "reverse"
+        });
         this.backwards_index--;
       } else if (
         data.type === "forward" &&
         this.backwards_index < this.fired_transitions.length - 1
       ) {
+        triggered = true;
         this.backwards_index++;
         const id = this.fired_transitions[this.backwards_index];
         const links = this.graph.getConnectedLinks(this.graph.getCell(id));
         const source_places = this.get_source_places(links, id);
         const target_places = this.get_target_places(links, id);
 
-        this.change_net_state(source_places, target_places);
+        await this.change_net_state(source_places, target_places, {
+          time: data.time
+        });
+      }
+
+      data.steps--;
+
+      if (data.steps > 0 && triggered) {
+        this.revert_net_state(data);
       }
     },
 
-    async change_net_state(source_places, target_places, direction) {
+    async change_net_state(source_places, target_places, options = {}) {
       if (this.can_fire_transition(source_places)) {
         this.on_animation = true;
-        const time = 500;
+        const time = options.time ?? 500;
 
-        this.change_sources(source_places, time, direction);
+        this.change_sources(source_places, time, options.direction);
 
         if (source_places.length > 0) {
           await sleep(time);
         }
 
         if (target_places.length > 0) {
-          this.change_targets(target_places, time, direction);
+          this.change_targets(target_places, time, options.direction);
           await sleep(time);
         } else {
           this.on_animation = false;
@@ -150,9 +216,12 @@ export default {
         const tokens = source.element.get("tokens");
 
         source.element.set("tokens", tokens - source.weight);
-        source.link
-          .findView(this.paper)
-          .sendToken(token_element, { duration: time, direction });
+
+        if (time > 0) {
+          source.link
+            .findView(this.paper)
+            .sendToken(token_element, { duration: time, direction });
+        }
       });
     },
 
@@ -166,13 +235,18 @@ export default {
         });
         const tokens = target.element.get("tokens");
 
-        target.link
-          .findView(this.paper)
-          .sendToken(token_element, { duration: time, direction }, () => {
-            target.element.set("tokens", tokens + target.weight);
-            token_set++;
-            this.on_animation = token_set !== target_places.length;
-          });
+        if (time > 0) {
+          target.link
+            .findView(this.paper)
+            .sendToken(token_element, { duration: time, direction }, () => {
+              target.element.set("tokens", tokens + target.weight);
+              token_set++;
+              this.on_animation = token_set !== target_places.length;
+            });
+        } else {
+          target.element.set("tokens", tokens + target.weight);
+          this.on_animation = false;
+        }
       });
     },
 
