@@ -2,6 +2,11 @@
   <div>
     <joint-paper
       v-if="graph !== null"
+      :class="{
+        'model-paper': true,
+        'creating-arc': tmp_arc.length === 1,
+        'grabbing': grabbing_element
+      }"
       :graph="graph"
       :capture-mouse-movement="capture_mouse"
       :freeze-dimensions="currentState !== ''"
@@ -10,6 +15,8 @@
       @element-click="handle_element_click"
       @element-contextmenu="handle_element_contextmenu"
       @mouse-move="handle_mouse_move"
+      @element-mousedown="grabbing_element = true"
+      @element-mouseup="grabbing_element = false"
     >
       <div hidden>
         <joint-place
@@ -100,7 +107,9 @@ export default {
         need_update: true
       },
       open_modal: false,
-      capture_mouse: false
+      capture_mouse: false,
+      grabbing_element: false,
+      id_timeout: null
     };
   },
 
@@ -365,3 +374,23 @@ export default {
   }
 };
 </script>
+
+<style>
+.model-paper :is(.joint-type-pn-place, .joint-type-pn-transition) {
+  cursor: grab;
+}
+
+.model-paper.grabbing :is(.joint-type-pn-place, .joint-type-pn-transition) {
+  cursor: grabbing;
+}
+
+.model-paper .joint-type-pn-link .connection-wrap,
+.model-paper .marker-vertices {
+  cursor: pointer;
+}
+
+.model-paper.creating-arc
+  :is(.marker-arrowheads, .marker-vertices, .connection-wrap) {
+  display: none;
+}
+</style>

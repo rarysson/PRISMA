@@ -77,7 +77,7 @@ export default {
       paper_top: 0,
       paper_left: 0,
       initial_width: 800,
-      initial_height: 600,
+      initial_height: 500,
       initial_x: 0,
       initial_y: 0
     };
@@ -145,7 +145,7 @@ export default {
         model: this.graph,
         gridSize: 1,
         width: this.paper_container_width - this.padding_paper,
-        height: this.paper_container_height - this.padding_paper,
+        height: this.paper_container_height - this.padding_paper * 2,
         defaultAnchor: { name: "center" },
         defaultConnectionPoint: { name: "boundary" },
         linkPinning: false,
@@ -183,6 +183,8 @@ export default {
       this.paper.on("element:contextmenu", this.handle_context_menu);
       this.paper.on("link:pointerclick", this.handle_element_click);
       this.paper.on("link:contextmenu", this.handle_context_menu);
+      this.paper.on("element:pointerdown", this.emit_element_mousedown);
+      this.paper.on("element:pointerup", this.emit_element_mouseup);
       this.$refs.paper.addEventListener("mousemove", this.handle_mouse_move);
     },
 
@@ -192,6 +194,8 @@ export default {
       this.paper.off("element:contextmenu", this.handle_context_menu);
       this.paper.off("link:pointerclick", this.handle_element_click);
       this.paper.off("link:contextmenu", this.handle_context_menu);
+      this.paper.off("element:pointerdown", this.emit_element_mousedown);
+      this.paper.off("element:pointerup", this.emit_element_mouseup);
       this.$refs.paper.removeEventListener("mousemove", this.handle_mouse_move);
     },
 
@@ -223,6 +227,14 @@ export default {
           this.paper.pageToLocalPoint(event.pageX, event.pageY)
         );
       }
+    },
+
+    emit_element_mousedown() {
+      this.$emit("element-mousedown");
+    },
+
+    emit_element_mouseup() {
+      this.$emit("element-mouseup");
     },
 
     resize_paper({ top, left, width, height }) {

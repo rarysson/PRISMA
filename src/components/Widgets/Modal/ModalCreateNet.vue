@@ -58,6 +58,8 @@ export default {
         if (!data) {
           this.set_net_name(this.net_name);
           this.open = false;
+        } else {
+          console.warn("O nome de rede já existe");
         }
       } catch (error) {
         console.log(error);

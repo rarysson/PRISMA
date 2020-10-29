@@ -1,6 +1,7 @@
 <template>
   <joint-paper
     v-if="graph !== null"
+    class="simulate-paper"
     :graph="graph"
     :extra-options="{ interactive: false }"
     :freeze-dimensions="true"
@@ -270,3 +271,17 @@ export default {
   }
 };
 </script>
+
+<style>
+.simulate-paper :is(.marker-arrowheads, .marker-vertices, .connection-wrap) {
+  display: none;
+}
+
+.simulate-paper .joint-type-pn-place {
+  cursor: default;
+}
+
+.simulate-paper .joint-type-pn-transition {
+  cursor: pointer;
+}
+</style>

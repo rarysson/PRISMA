@@ -1,6 +1,7 @@
 <template>
   <joint-paper
     v-if="graph !== null"
+    class="archive-paper"
     :graph="graph"
     :extra-options="{ interactive: false }"
     :freeze-dimensions="true"
@@ -37,3 +38,13 @@ export default {
   }
 };
 </script>
+
+<style>
+.archive-paper :is(.marker-arrowheads, .marker-vertices, .connection-wrap) {
+  display: none;
+}
+
+.archive-paper .joint-cell {
+  cursor: default;
+}
+</style>
