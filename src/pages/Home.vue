@@ -20,6 +20,7 @@
     </v-tabs>
 
     <component
+      class="net-component"
       :is="current_component"
       :current-state="current_state"
       ref="net"
@@ -119,9 +120,19 @@ export default {
 </script>
 
 <style scoped>
+.page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 .v-tabs {
   position: relative;
   z-index: 99;
   background-color: whitesmoke;
+}
+
+.net-component {
+  flex: auto;
 }
 </style>

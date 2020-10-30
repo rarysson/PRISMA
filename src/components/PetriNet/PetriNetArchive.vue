@@ -1,22 +1,25 @@
 <template>
   <joint-paper
-    v-if="graph !== null"
+    v-if="graph !== null && !is_net_empty"
     class="archive-paper"
     :graph="graph"
     :extra-options="{ interactive: false }"
     :freeze-dimensions="true"
   />
+  <prisma-logo v-else />
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import JointPaper from "@/components/Joint/JointPaper";
+import PrismaLogo from "@/components/Widgets/PetriNet/PrismaLogo";
 
 export default {
   name: "PetriNetArchive",
 
   components: {
-    JointPaper
+    JointPaper,
+    PrismaLogo
   },
 
   data() {

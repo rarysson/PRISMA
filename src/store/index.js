@@ -9,7 +9,7 @@ function is_object_empty(object) {
 
 export default new Vuex.Store({
     state: {
-        net: {},
+        net: { cells: [] },
         paper_dimensions: {},
         net_name: null,
         need_update_net: false,
@@ -27,7 +27,7 @@ export default new Vuex.Store({
         save_config: (state) => state.configs.save,
         net_name: (state) => state.net_name,
         need_update_net: (state) => state.need_update_net,
-        is_net_empty: (state) => is_object_empty(state.net),
+        is_net_empty: (state) => state.net.cells.length === 0,
         is_dimensions_empty: (state) => is_object_empty(state.paper_dimensions)
     },
 

@@ -1,6 +1,6 @@
 <template>
   <joint-paper
-    v-if="graph !== null"
+    v-if="graph !== null && !is_net_empty"
     class="simulate-paper"
     :graph="graph"
     :extra-options="{ interactive: false }"
@@ -8,12 +8,14 @@
     @element-click="handle_element_click"
     @mounted="paper = $event"
   />
+  <prisma-logo v-else />
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import { sleep, get_formatted_joint_type } from "@/util/funcs";
 import JointPaper from "@/components/Joint/JointPaper";
+import PrismaLogo from "@/components/Widgets/PetriNet/PrismaLogo";
 
 function shuffle_array(array) {
   let tmp_value, random_index;
@@ -34,7 +36,8 @@ export default {
   name: "PetriNetSimulate",
 
   components: {
-    JointPaper
+    JointPaper,
+    PrismaLogo
   },
 
   data() {
