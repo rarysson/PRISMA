@@ -1,5 +1,5 @@
 <template>
-  <div v-if="is_active">
+  <div v-if="is_active" class="tab">
     <slot />
   </div>
 </template>
@@ -23,3 +23,18 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.tab {
+  padding: 20px 15px;
+  background-color: white;
+  border: 1px solid black;
+  height: 120px;
+  display: flex;
+  align-items: center;
+}
+
+.tab > * {
+  width: 100%;
+}
+</style>

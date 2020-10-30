@@ -1,10 +1,6 @@
 <template>
   <div class="page-container">
-    <v-tabs
-      class="v-tabs"
-      :selected="current_tab"
-      @change="current_tab = $event"
-    >
+    <v-tabs class="tabs" :selected="current_tab" @change="current_tab = $event">
       <v-tab title="Arquivo">
         <option-archive />
       </v-tab>
@@ -126,7 +122,7 @@ export default {
   height: 100vh;
 }
 
-.v-tabs {
+.tabs {
   position: relative;
   z-index: 99;
   background-color: whitesmoke;

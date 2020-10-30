@@ -1,8 +1,14 @@
 <template>
-  <div>
-    <button v-for="tab in tabs" :key="tab" @click="change_tab(tab)">
+  <div class="v-tabs">
+    <button
+      v-for="(tab, index) in tabs"
+      :class="{ 'tab-option': true, 'active': index === current_tab_index }"
+      :key="tab"
+      @click="change_tab(tab)"
+    >
       {{ tab }}
     </button>
+
     <slot />
   </div>
 </template>
@@ -20,8 +26,9 @@ export default {
 
   data() {
     return {
+      tabs: [],
       current_tab: this.selected,
-      tabs: []
+      current_tab_index: 0
     };
   },
 
@@ -43,6 +50,9 @@ export default {
   methods: {
     change_tab(tab) {
       this.current_tab = tab;
+      this.current_tab_index = this.tabs.findIndex(
+        (tab) => tab === this.current_tab
+      );
 
       this.$children.forEach((child) => {
         child.is_active = child.name === tab;
@@ -53,3 +63,42 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.v-tabs {
+  padding: 20px;
+}
+
+.tab-option {
+  position: relative;
+  padding: 10px;
+  background-color: #e0e0e0;
+  border: 1px solid #e0e0e0;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.tab-option.active {
+  background-color: white;
+}
+
+.tab-option:hover,
+.tab-option.active {
+  border-color: black;
+  border-bottom-color: white;
+}
+
+.tab-option.active::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: white;
+}
+
+.tab-option:not(:first-child) {
+  margin-left: 5px;
+}
+</style>
