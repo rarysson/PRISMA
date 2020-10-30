@@ -72,8 +72,8 @@ export default {
 .tab-option {
   position: relative;
   padding: 10px;
-  background-color: #e0e0e0;
-  border: 1px solid #e0e0e0;
+  background-color: var(--light-gray);
+  border: 1px solid var(--light-gray);
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }

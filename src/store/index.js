@@ -53,7 +53,7 @@ export default new Vuex.Store({
         },
 
         empty_net({ commit }) {
-            commit("set_net", {});
+            commit("set_net", { cells: [] });
         }
     },
 

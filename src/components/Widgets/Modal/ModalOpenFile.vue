@@ -1,14 +1,15 @@
 <template>
   <modal v-model="open">
-    <form @submit.prevent="submit_net_name">
-      <ul>
-        <li v-for="(net, i) in nets" :key="i" @click="net_name = net.name">
-          {{ net.name }}
-        </li>
-      </ul>
-      <button type="button" @click="open = false">cancelar</button>
-      <button type="submit">confirmar</button>
-    </form>
+    <div class="modal-content">
+      <div class="nets-table-container">
+        <nets-table :nets="data" @click="net_name = $event" />
+      </div>
+
+      <div class="btns-container">
+        <button @click="open = false" class="danger">Cancelar</button>
+        <button @click="submit_net_name" class="success">Confirmar</button>
+      </div>
+    </div>
   </modal>
 </template>
 
@@ -16,6 +17,21 @@
 import { mapActions } from "vuex";
 import db from "@/util/db";
 import Modal from "./Modal";
+import NetsTable from "@/components/Widgets/ModalOpenFile/NetsTable";
+
+function get_formatted_date(date_arg) {
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric"
+  };
+  const date = new Date(date_arg);
+
+  return date.toLocaleDateString("pt-br", { ...options, month: "numeric" });
+}
 
 export default {
   name: "ModalOpenFile",
@@ -28,25 +44,27 @@ export default {
   },
 
   components: {
-    Modal
+    Modal,
+    NetsTable
   },
 
   data() {
     return {
       open: this.value,
       net_name: null,
-      nets: []
+      data: []
     };
   },
 
   async mounted() {
     try {
-      const data = await db.nets.toArray();
-      const d = data.map((i) => ({
-        name: i.name,
-        last_update: i.last_update
+      const nets = await db.nets.toArray();
+      const data = nets.map((net) => ({
+        name: net.name,
+        last_update: get_formatted_date(net.last_update)
       }));
-      this.nets = d;
+
+      this.data = data;
     } catch (error) {
       console.log(error);
     }
@@ -79,6 +97,52 @@ export default {
   width: 750px;
   height: 550px;
   background-color: whitesmoke;
-  padding: 3%;
+  padding: 2% 3%;
+}
+
+.modal-content {
+  position: relative;
+  height: 100%;
+}
+
+.nets-table-container {
+  height: 90%;
+  overflow: auto;
+}
+
+.btns-container {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: var(--light);
+}
+
+.success {
+  background-color: var(--success);
+  border-color: var(--success);
+}
+
+.success:hover {
+  color: var(--success);
+  background-color: var(--light);
+}
+
+.danger {
+  background-color: var(--danger);
+  border-color: var(--danger);
+}
+
+.danger:hover {
+  color: var(--danger);
+  background-color: var(--light);
 }
 </style>
