@@ -1,9 +1,11 @@
 <template>
   <modal v-model="open">
-    <form @submit.prevent="export_file">
-      <button type="button" @click="open = false">cancelar</button>
-      <button type="submit">Exportar como .prisma</button>
-    </form>
+    <div class="content-container">
+      <button class="btn-export" @click="export_file">
+        Exportar como PRISMA
+      </button>
+      <button class="btn-close" @click="open = false">Cancelar</button>
+    </div>
   </modal>
 </template>
 
@@ -61,6 +63,8 @@ export default {
         );
 
         file_saver.saveAs(file);
+      } else {
+        console.warn("Não é possível exportar uma rede vazia");
       }
 
       this.open = false;
@@ -72,8 +76,43 @@ export default {
 <style scoped>
 /deep/ .modal {
   width: 500px;
-  height: 200px;
+  height: 300px;
   background-color: whitesmoke;
-  padding: 3%;
+  padding: 2%;
+}
+
+.content-container {
+  position: relative;
+  height: 100%;
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.btn-export {
+  border: 1px solid var(--dark);
+  color: var(--light);
+  background-color: var(--dark);
+}
+
+.btn-export:hover {
+  color: var(--dark);
+  background-color: var(--light);
+}
+
+.btn-close {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border: 1px solid var(--danger);
+  color: var(--light);
+  background-color: var(--danger);
+}
+
+.btn-close:hover {
+  color: var(--danger);
+  background-color: var(--light);
 }
 </style>
