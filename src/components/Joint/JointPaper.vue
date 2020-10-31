@@ -211,13 +211,18 @@ export default {
     },
 
     handle_context_menu(element, event, x, y) {
+      const local = this.paper.localToPaperPoint(x, y);
       const id = element.model.id;
       const type = get_formatted_joint_type(element.model.attributes.type);
 
-      x += this.$refs.paper.offsetLeft;
-      y += this.$refs.paper.offsetTop;
+      local.x += this.$refs.paper.offsetLeft;
+      local.y += this.$refs.paper.offsetTop;
 
-      this.$emit("element-contextmenu", { id, type, position: { x, y } });
+      this.$emit("element-contextmenu", {
+        id,
+        type,
+        position: { x: local.x, y: local.y }
+      });
     },
 
     handle_mouse_move(event) {

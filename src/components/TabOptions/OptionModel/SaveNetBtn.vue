@@ -1,10 +1,16 @@
 <template>
-  <div>
+  <div class="save-container">
     <btn-icon @click="save_net">
       <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
       Salvar arquivo
     </btn-icon>
-    <p>{{ auto_save_msg }}</p>
+    <i
+      v-show="saving"
+      class="save-style fa fa-sync fa-spin"
+      aria-hidden="true"
+    ></i>
+    <i v-show="done" class="save-style fa fa-check" aria-hidden="true"></i>
+    <p>{{ save_msg }}</p>
   </div>
 </template>
 
@@ -24,31 +30,42 @@ export default {
   data() {
     return {
       id_interval: null,
-      auto_save_msg: "",
-      old_net: null
+      save_msg: "",
+      old_net: null,
+      saving: false,
+      done: false,
+      msg_delay: 500
     };
   },
 
   mounted() {
     const { auto_save, delay } = this.save_config;
-    const msg_delay = 500;
     this.old_net = this.net;
 
     if (auto_save && this.net_name !== null) {
       this.id_interval = setInterval(async () => {
+        this.request_net_update(true);
+        // Delay para o sistema conseguir atualizar a rede
+        await sleep(100);
+
         if (JSON.stringify(this.old_net) !== JSON.stringify(this.net)) {
-          this.auto_save_msg = "salvando arquivo...";
-          await sleep(msg_delay);
+          this.save_msg = "salvando arquivo...";
+          this.saving = true;
+          await sleep(this.msg_delay);
+          this.saving = false;
           this.save_net();
           this.old_net = this.net;
-          this.auto_save_msg = "arquivo salvo";
-          await sleep(msg_delay);
-          this.auto_save_msg = "";
         }
-      }, delay * 1000 + msg_delay * 2);
+
+        this.request_net_update(false);
+      }, delay * 1000 + this.msg_delay * 2);
     } else {
       clearInterval(this.id_interval);
     }
+  },
+
+  beforeDestroy() {
+    clearInterval(this.id_interval);
   },
 
   computed: {
@@ -85,6 +102,13 @@ export default {
               paper_dimensions: this.paper_dimensions
             });
           }
+
+          this.save_msg = "arquivo salvo!";
+          this.done = true;
+          await sleep(this.msg_delay);
+          this.save_msg = "";
+          this.done = false;
+          await sleep(this.msg_delay);
         } catch (error) {
           console.log(error);
         }
@@ -95,3 +119,31 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.save-container {
+  position: relative;
+}
+
+p {
+  position: absolute;
+  bottom: -15px;
+  right: 10px;
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+.save-style {
+  position: absolute;
+  top: 25%;
+  right: 25%;
+}
+
+.fa-sync {
+  color: var(--blue);
+}
+
+.fa-check {
+  color: var(--success);
+}
+</style>

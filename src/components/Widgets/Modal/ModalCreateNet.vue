@@ -90,10 +90,11 @@ form {
 
 label {
   position: absolute;
-  top: 25%;
+  top: 50%;
   left: 10px;
   font-size: 1.2rem;
   color: gray;
+  transform: translateY(-50%);
   transition: all 250ms;
 }
 
@@ -108,7 +109,7 @@ input:focus + label,
 input:valid + label {
   font-size: 1rem;
   color: var(--dark);
-  transform: translateY(-150%);
+  transform: translateY(-200%);
 }
 
 button {

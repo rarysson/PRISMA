@@ -9,7 +9,7 @@
       }"
       :graph="graph"
       :capture-mouse-movement="capture_mouse"
-      :freeze-dimensions="currentState !== ''"
+      :freeze-dimensions="currentState !== '' || tmp_element !== null"
       :save-dimensions-before-destroy="true"
       @blank-click="handle_blank_click"
       @element-click="handle_element_click"
@@ -46,7 +46,7 @@
       </div>
       <template #overlay-elements>
         <context-menu
-          :data="tmp_element"
+          v-model="tmp_element"
           :position="context_menu_position"
           @update="update_element"
         />

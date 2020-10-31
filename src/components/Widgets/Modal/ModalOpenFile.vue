@@ -17,7 +17,7 @@
 import { mapActions } from "vuex";
 import db from "@/util/db";
 import Modal from "./Modal";
-import NetsTable from "@/components/Widgets/ModalOpenFile/NetsTable";
+import NetsTable from "./ModalOpenFile/NetsTable";
 import BtnClose from "@/components/Widgets/Btns/BtnClose";
 import BtnConfirm from "@/components/Widgets/Btns/BtnConfirm";
 

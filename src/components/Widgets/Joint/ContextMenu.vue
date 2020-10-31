@@ -1,6 +1,6 @@
 <template>
   <form
-    v-if="element !== null"
+    v-if="value !== null"
     class="context-menu-container"
     :style="{
       top: `${position.y}px`,
@@ -8,33 +8,33 @@
     }"
     @submit.prevent="submit"
   >
-    <div class="input-container" v-if="element.name !== undefined">
-      <input type="text" id="net-name" required v-model="element.name" />
+    <div class="input-container" v-if="value.name !== undefined">
+      <input type="text" id="net-name" required v-model="value.name" />
       <label for="net-name">Nome</label>
     </div>
-    <div class="input-container" v-if="element.tokens !== undefined">
+    <div class="input-container" v-if="value.tokens !== undefined">
       <input
         type="number"
         id="tokens"
         min="0"
         required
-        v-model.number="element.tokens"
+        v-model.number="value.tokens"
       />
       <label for="tokens">Fichas</label>
     </div>
-    <div class="input-container" v-if="element.weight !== undefined">
+    <div class="input-container" v-if="value.weight !== undefined">
       <input
         type="number"
         id="weight"
         min="1"
         required
-        v-model.number="element.weight"
+        v-model.number="value.weight"
       />
       <label for="weight">Peso</label>
     </div>
 
     <div class="btns-container">
-      <btn-close class="btn" @click="element = null">Cancelar</btn-close>
+      <btn-close class="btn" @click="close">Cancelar</btn-close>
       <btn-confirm class="btn">Atualizar</btn-confirm>
     </div>
   </form>
@@ -48,7 +48,7 @@ export default {
   name: "ContextMenu",
 
   props: {
-    data: {
+    value: {
       required: true,
       validator(data) {
         return typeof data === "object" || data === null;
@@ -66,21 +66,13 @@ export default {
     BtnConfirm
   },
 
-  data() {
-    return {
-      element: this.data
-    };
-  },
-
-  watch: {
-    data(new_val) {
-      this.element = new_val;
-    }
-  },
-
   methods: {
     submit() {
       this.$emit("update", this.element);
+    },
+
+    close() {
+      this.$emit("input", null);
     }
   }
 };
@@ -106,22 +98,25 @@ export default {
 
 input {
   border: none;
+  padding-left: 5px;
 }
 
 label {
   position: absolute;
-  top: 20%;
+  top: 50%;
   left: 5px;
   font-size: 0.75rem;
   color: gray;
+  transform: translateY(-50%);
   transition: all 250ms;
 }
 
 input:focus + label,
-input:valid + label {
+input:valid + label,
+input:invalid + label {
   font-size: 0.9rem;
   color: var(--dark);
-  transform: translateY(-110%) translateX(-5px);
+  transform: translateY(-150%) translateX(-5px);
 }
 
 .btns-container {

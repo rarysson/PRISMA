@@ -25,6 +25,7 @@ button {
   position: relative;
   padding: 15px;
   border: 1px solid transparent;
+  border-radius: 5px;
   background-color: white;
 }
 

@@ -82,7 +82,11 @@ export default {
   background-color: white;
 }
 
-.tab-option:hover,
+.tab-option:hover {
+  border-color: black;
+  border-bottom-color: var(--light-gray);
+}
+
 .tab-option.active {
   border-color: black;
   border-bottom-color: white;

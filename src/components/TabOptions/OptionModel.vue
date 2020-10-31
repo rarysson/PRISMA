@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import SaveNetBtn from "@/components/Widgets/OptionModel/SaveNetBtn";
+import SaveNetBtn from "./OptionModel/SaveNetBtn";
 import BtnIcon from "@/components/Widgets/Btns/BtnIcon";
 
 export default {
