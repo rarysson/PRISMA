@@ -1,5 +1,5 @@
 <template>
-  <transition name="modal">
+  <transition name="modal" appear>
     <div v-if="open" class="overlay">
       <div class="modal">
         <slot />
@@ -49,6 +49,10 @@ export default {
   place-items: center;
   background-color: rgba(75, 75, 75, 0.75);
   z-index: 99;
+}
+
+.modal-enter-active,
+.modal-leave-active {
   transition: all 0.3s;
 }
 
@@ -59,7 +63,7 @@ export default {
 }
 
 .modal-enter .modal,
-.modal-leave-active .modal {
+.modal-leave-to .modal {
   transform: scale(0.1);
 }
 </style>
