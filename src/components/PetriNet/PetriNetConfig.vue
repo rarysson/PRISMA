@@ -1,30 +1,43 @@
 <template>
-  <div>
-    <input type="checkbox" name="" id="auto-save" v-model="auto_save" />
-    <label for="auto-save">Salvar automaticamente</label>
+  <div class="config-net">
+    <article>
+      <h2>Arquivos</h2>
+      <hr />
 
-    <div v-if="auto_save">
-      <label for="time">Salvar automáticametente após:</label>
-      <input
-        type="number"
-        id="time"
-        min="1"
-        max="300"
-        v-model.number="delay"
-        placeholder="tempo em segundos"
-      />
-    </div>
+      <input type="checkbox" id="auto-save" v-model="auto_save" />
+      <label for="auto-save">Salvar automaticamente</label>
 
-    <button @click="change_config">Salvar mudanças</button>
+      <div v-if="auto_save" class="delay-option">
+        <label for="time">Delay do auto salvamento</label>
+        <br />
+        <input
+          type="number"
+          id="time"
+          min="1"
+          max="300"
+          v-model.number="delay"
+        />
+        <label for="time">segundo(s)</label>
+      </div>
+    </article>
+
+    <btn-confirm class="btn-confirm" @click="change_config"
+      >Salvar mudanças</btn-confirm
+    >
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import db from "@/util/db";
+import BtnConfirm from "@/components/Widgets/Btns/BtnConfirm";
 
 export default {
   name: "PetriNetConfig",
+
+  components: {
+    BtnConfirm
+  },
 
   data() {
     return {
@@ -70,3 +83,42 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.config-net {
+  position: relative;
+  margin: 10px 50px 50px;
+  padding: 10px 20px;
+  background-color: white;
+}
+
+hr {
+  color: var(--light-gray);
+  margin-bottom: 20px;
+}
+
+#auto-save {
+  margin-right: 10px;
+}
+
+.delay-option {
+  margin-top: 10px;
+  margin-left: 25px;
+}
+
+#time {
+  width: 50px;
+  text-align: center;
+  margin-top: 5px;
+}
+
+#time + label {
+  margin-left: 5px;
+}
+
+.btn-confirm {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+</style>
