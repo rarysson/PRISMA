@@ -1,42 +1,54 @@
 <template>
-  <div>
-    <fieldset class="menu">
-      <legend>INSERIR</legend>
-      <button @click="toggle_state('setting_place', $event)">
-        LUGAR
-      </button>
-      <button @click="toggle_state('setting_transition', $event)">
-        TRANSIÇÃO
-      </button>
-      <button @click="toggle_state('setting_arc', $event)">
-        ARCO
-      </button>
-      <button @click="toggle_state('setting_token', $event)">
-        FICHA
-      </button>
-    </fieldset>
-    <fieldset class="menu">
-      <legend>REMOVER</legend>
-      <button @click="toggle_state('removing_place', $event)">
-        LUGAR
-      </button>
-      <button @click="toggle_state('removing_transition', $event)">
-        TRANSIÇÃO
-      </button>
-      <button @click="toggle_state('removing_arc', $event)">
-        ARCO
-      </button>
-      <button @click="toggle_state('removing_token', $event)">
-        FICHA
-      </button>
+  <div class="option-model-container">
+    <fieldset>
+      <legend>Inserir</legend>
+
+      <btn-icon @click="toggle_state('setting_place', $event)">
+        <i class="fa fa-circle-thin fa-lg" aria-hidden="true"></i>
+        Lugar
+      </btn-icon>
+      <btn-icon @click="toggle_state('setting_transition', $event)">
+        <i class="fa fa-minus fa-lg fa-rotate-90" aria-hidden="true"></i>
+        Transição
+      </btn-icon>
+      <btn-icon @click="toggle_state('setting_arc', $event)">
+        <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+        Arco
+      </btn-icon>
+      <btn-icon @click="toggle_state('setting_token', $event)">
+        <i class="fa fa-circle" aria-hidden="true"></i>
+        Ficha
+      </btn-icon>
     </fieldset>
 
-    <save-net-btn />
+    <fieldset>
+      <legend>Remover</legend>
+
+      <btn-icon @click="toggle_state('removing_place', $event)">
+        <i class="fa fa-circle-thin fa-lg" aria-hidden="true"></i>
+        Lugar
+      </btn-icon>
+      <btn-icon @click="toggle_state('removing_transition', $event)">
+        <i class="fa fa-minus fa-lg fa-rotate-90" aria-hidden="true"></i>
+        Transição
+      </btn-icon>
+      <btn-icon @click="toggle_state('removing_arc', $event)">
+        <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+        Arco
+      </btn-icon>
+      <btn-icon @click="toggle_state('removing_token', $event)">
+        <i class="fa fa-circle" aria-hidden="true"></i>
+        Ficha
+      </btn-icon>
+    </fieldset>
+
+    <save-net-btn class="save-net-btn" />
   </div>
 </template>
 
 <script>
 import SaveNetBtn from "@/components/Widgets/OptionModel/SaveNetBtn";
+import BtnIcon from "@/components/Widgets/Btns/BtnIcon";
 
 export default {
   name: "OptionModel",
@@ -49,7 +61,8 @@ export default {
   },
 
   components: {
-    SaveNetBtn
+    SaveNetBtn,
+    BtnIcon
   },
 
   data() {
@@ -102,18 +115,39 @@ export default {
 </script>
 
 <style scoped>
-.active {
-  border: 2px solid black;
+.option-model-container {
+  position: relative;
+  width: 100%;
 }
 
-.menu {
+fieldset {
   text-align: center;
-  padding-top: 20px;
-  width: 45%;
+  padding: 5px;
+  width: 350px;
   display: inline-block;
+  border-color: var(--dark);
 }
 
-button {
-  padding: 15px;
+fieldset:not(:first-of-type) {
+  margin-left: 25px;
+}
+
+legend {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 0 10px;
+  padding: 0 5px;
+}
+
+.save-net-btn {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.active {
+  color: var(--light);
+  background-color: var(--dark);
 }
 </style>

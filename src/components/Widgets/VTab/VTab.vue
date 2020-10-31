@@ -33,8 +33,4 @@ export default {
   display: flex;
   align-items: center;
 }
-
-.tab > * {
-  width: 100%;
-}
 </style>

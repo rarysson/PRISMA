@@ -1,6 +1,9 @@
 <template>
   <div>
-    <button @click="save_net">Salvar arquivo</button>
+    <btn-icon @click="save_net">
+      <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
+      Salvar arquivo
+    </btn-icon>
     <p>{{ auto_save_msg }}</p>
   </div>
 </template>
@@ -9,9 +12,14 @@
 import { mapGetters, mapActions } from "vuex";
 import db from "@/util/db";
 import { sleep } from "@/util/funcs";
+import BtnIcon from "@/components/Widgets/Btns/BtnIcon";
 
 export default {
   name: "SaveNetBtn",
+
+  components: {
+    BtnIcon
+  },
 
   data() {
     return {
@@ -87,13 +95,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-button {
-  padding: 15px;
-}
-
-div {
-  display: inline-block;
-}
-</style>

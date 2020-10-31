@@ -1,21 +1,21 @@
 <template>
   <div>
-    <button @click="$emit('change', { type: 'backward', steps: 1 })">
+    <btn-icon @click="$emit('change', { type: 'backward', steps: 1 })">
       <i class="fa fa-angle-left fa-lg" aria-hidden="true"></i>
       Desfazer passo
-    </button>
-    <button @click="$emit('change', { type: 'forward', steps: 1 })">
+    </btn-icon>
+    <btn-icon @click="$emit('change', { type: 'forward', steps: 1 })">
       <i class="fa fa-angle-right fa-lg" aria-hidden="true"></i>
       Refazer passo
-    </button>
-    <button @click="set_simulation_type('backward')">
+    </btn-icon>
+    <btn-icon @click="set_simulation_type('backward')">
       <i class="fa fa-angle-double-left fa-lg" aria-hidden="true"></i>
       Voltar simulação
-    </button>
-    <button @click="set_simulation_type('forward')">
+    </btn-icon>
+    <btn-icon @click="set_simulation_type('forward')">
       <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i>
       Avançar simulação
-    </button>
+    </btn-icon>
 
     <modal-simulation v-model="open_modal" @change="emit_config" />
   </div>
@@ -23,12 +23,14 @@
 
 <script>
 import ModalSimulation from "@/components/Widgets/Modal/ModalSimulation";
+import BtnIcon from "@/components/Widgets/Btns/BtnIcon";
 
 export default {
   name: "OptionSimulate",
 
   components: {
-    ModalSimulation
+    ModalSimulation,
+    BtnIcon
   },
 
   data() {
@@ -53,24 +55,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-button {
-  padding: 15px;
-  border: none;
-  background-color: white;
-}
-
-button:hover {
-  outline: 1px solid black;
-}
-
-button:not(:first-child) {
-  margin-left: 15px;
-}
-
-button i {
-  display: block;
-  margin-bottom: 3px;
-}
-</style>
