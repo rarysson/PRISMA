@@ -1,13 +1,12 @@
 <template>
   <modal v-model="open">
     <form @submit.prevent="submit_net_name">
-      <input
-        type="text"
-        v-model.trim="net_name"
-        placeholder="nome da rede"
-        required
-      />
-      <button type="submit">confirmar</button>
+      <div class="input-container">
+        <input id="net-name" v-model.trim="net_name" type="text" required />
+        <label for="net-name">Nome da rede</label>
+      </div>
+
+      <btn-confirm>Confirmar</btn-confirm>
     </form>
   </modal>
 </template>
@@ -16,6 +15,7 @@
 import { mapActions } from "vuex";
 import db from "@/util/db";
 import Modal from "./Modal";
+import BtnConfirm from "@/components/Widgets/Btns/BtnConfirm";
 
 export default {
   name: "ModalCreateNet",
@@ -28,7 +28,8 @@ export default {
   },
 
   components: {
-    Modal
+    Modal,
+    BtnConfirm
   },
 
   data() {
@@ -74,6 +75,45 @@ export default {
   width: 500px;
   height: 200px;
   background-color: whitesmoke;
-  padding: 3%;
+  padding: 2%;
+}
+
+form {
+  position: relative;
+  height: 100%;
+}
+
+.input-container {
+  position: relative;
+  margin-top: 15px;
+}
+
+label {
+  position: absolute;
+  top: 25%;
+  left: 10px;
+  font-size: 1.2rem;
+  color: gray;
+  transition: all 250ms;
+}
+
+input {
+  width: 75%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+}
+
+input:focus + label,
+input:valid + label {
+  font-size: 1rem;
+  color: var(--dark);
+  transform: translateY(-150%);
+}
+
+button {
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 </style>
