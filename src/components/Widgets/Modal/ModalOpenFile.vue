@@ -6,8 +6,8 @@
       </div>
 
       <div class="btns-container">
-        <button @click="open = false" class="danger">Cancelar</button>
-        <button @click="submit_net_name" class="success">Confirmar</button>
+        <btn-close @click="open = false">Cancelar</btn-close>
+        <btn-confirm @click="submit_net_name">Confirmar</btn-confirm>
       </div>
     </div>
   </modal>
@@ -18,6 +18,8 @@ import { mapActions } from "vuex";
 import db from "@/util/db";
 import Modal from "./Modal";
 import NetsTable from "@/components/Widgets/ModalOpenFile/NetsTable";
+import BtnClose from "@/components/Widgets/Btns/BtnClose";
+import BtnConfirm from "@/components/Widgets/Btns/BtnConfirm";
 
 function get_formatted_date(date_arg) {
   const options = {
@@ -45,7 +47,9 @@ export default {
 
   components: {
     Modal,
-    NetsTable
+    NetsTable,
+    BtnClose,
+    BtnConfirm
   },
 
   data() {
@@ -117,32 +121,5 @@ export default {
   left: 0;
   display: flex;
   justify-content: space-between;
-}
-
-button {
-  padding: 10px 20px;
-  border: 1px solid transparent;
-  border-radius: 5px;
-  color: var(--light);
-}
-
-.success {
-  background-color: var(--success);
-  border-color: var(--success);
-}
-
-.success:hover {
-  color: var(--success);
-  background-color: var(--light);
-}
-
-.danger {
-  background-color: var(--danger);
-  border-color: var(--danger);
-}
-
-.danger:hover {
-  color: var(--danger);
-  background-color: var(--light);
 }
 </style>

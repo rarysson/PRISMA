@@ -4,7 +4,7 @@
       <button class="btn-export" @click="export_file">
         Exportar como PRISMA
       </button>
-      <button class="btn-close" @click="open = false">Cancelar</button>
+      <btn-close class="btn-close" @click="open = false">Cancelar</btn-close>
     </div>
   </modal>
 </template>
@@ -13,6 +13,7 @@
 import * as file_saver from "file-saver";
 import { mapGetters } from "vuex";
 import Modal from "./Modal";
+import BtnClose from "@/components/Widgets/Btns/BtnClose";
 
 export default {
   name: "ModalExportFile",
@@ -25,7 +26,8 @@ export default {
   },
 
   components: {
-    Modal
+    Modal,
+    BtnClose
   },
 
   data() {
@@ -106,13 +108,5 @@ button {
   position: absolute;
   bottom: 0;
   left: 0;
-  border: 1px solid var(--danger);
-  color: var(--light);
-  background-color: var(--danger);
-}
-
-.btn-close:hover {
-  color: var(--danger);
-  background-color: var(--light);
 }
 </style>
