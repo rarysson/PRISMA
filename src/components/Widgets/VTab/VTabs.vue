@@ -66,7 +66,7 @@ export default {
 
 <style scoped>
 .v-tabs {
-  padding: 20px;
+  padding: 20px 50px;
 }
 
 .tab-option {

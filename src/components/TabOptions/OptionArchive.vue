@@ -1,8 +1,17 @@
 <template>
   <div>
-    <button @click="set_modal('Open')">Abrir arquivo</button>
-    <button @click="set_modal('Export')">Exportar arquivo</button>
-    <button @click="set_modal('Import')">Importar arquivo</button>
+    <button @click="set_modal('Open')">
+      <i class="fa fa-folder-open-o fa-lg" aria-hidden="true"></i>
+      Abrir arquivo
+    </button>
+    <button @click="set_modal('Export')">
+      <i class="fa fa-download fa-lg" aria-hidden="true"></i>
+      Exportar arquivo
+    </button>
+    <button @click="set_modal('Import')">
+      <i class="fa fa-upload fa-lg" aria-hidden="true"></i>
+      Importar arquivo
+    </button>
 
     <component :is="current_modal" v-model="open_modal" />
   </div>
@@ -41,5 +50,20 @@ export default {
 <style scoped>
 button {
   padding: 15px;
+  border: none;
+  background-color: white;
+}
+
+button:hover {
+  outline: 1px solid black;
+}
+
+button:not(:first-child) {
+  margin-left: 15px;
+}
+
+button i {
+  display: block;
+  margin-bottom: 3px;
 }
 </style>
