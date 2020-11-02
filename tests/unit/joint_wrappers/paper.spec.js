@@ -1,15 +1,30 @@
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, createLocalVue } from "@vue/test-utils";
 import JointPaper from "@/components/Joint/JointPaper";
+import Vuex from "vuex";
+import { get_store } from "../data/store";
 
 let wrapper;
+let store;
+let graph;
+const localVue = createLocalVue();
+const config_data = () => ({
+    store,
+    localVue,
+    attachTo: "#root",
+    propsData: {
+        graph
+    }
+});
+
+localVue.use(Vuex);
 
 beforeEach(() => {
-    const graph = new window.joint.dia.Graph();
-    wrapper = shallowMount(JointPaper, {
-        propsData: {
-            graph
-        }
-    });
+    const div = document.createElement("div");
+    div.id = "root";
+    document.body.appendChild(div);
+    graph = new window.joint.dia.Graph();
+    store = new Vuex.Store(get_store());
+    wrapper = shallowMount(JointPaper, config_data());
 });
 
 afterEach(() => {

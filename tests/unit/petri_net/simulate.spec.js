@@ -1,8 +1,8 @@
 import { shallowMount, createLocalVue } from "@vue/test-utils";
 import Vuex from "vuex";
 import PetriNetSimulate from "@/components/PetriNet/PetriNetSimulate";
-import { get_store } from "./data/store";
-import net from "./data/net.json";
+import { get_store } from "../data/store";
+import net from "../data/net.json";
 
 const localVue = createLocalVue();
 let wrapper;
