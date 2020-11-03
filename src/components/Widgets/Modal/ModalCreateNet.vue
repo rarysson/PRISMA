@@ -60,10 +60,10 @@ export default {
           this.set_net_name(this.net_name);
           this.open = false;
         } else {
-          console.warn("O nome de rede já existe");
+          this.$toast.warning("O nome de rede já existe");
         }
       } catch (error) {
-        console.log(error);
+        this.$toast.error(error);
       }
     }
   }

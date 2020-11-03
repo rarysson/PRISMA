@@ -70,7 +70,7 @@ export default {
 
       this.data = data;
     } catch (error) {
-      console.log(error);
+      this.$toast.error(error);
     }
   },
 

@@ -82,8 +82,8 @@ export default {
       if (this.file !== null) {
         reader.readAsText(this.file);
       } else {
-        console.warn(
-          "É necessário a transferência de um arquivo .prisma para essa ação"
+        this.$toast.warning(
+          "É necessário a transferência de um arquivo PRISMA para essa ação"
         );
       }
 
@@ -95,10 +95,13 @@ export default {
           const obj = JSON.parse(event.target.result);
 
           if (names.includes(name)) {
-            console.warn(
-              `Já existe uma Rede com esse nome.
-              Caso não queira perder os dados da rede antiga, mude o nome do arquivo e importe novamente.`
+            this.$toast.info(
+              "Caso não queira perder os dados da rede antiga, mude o nome do arquivo e importe novamente",
+              { duration: 7000 }
             );
+            this.$toast.warning("Já existe uma Rede com esse nome", {
+              duration: 7000
+            });
           }
 
           this.set_net(obj);
@@ -106,12 +109,12 @@ export default {
           this.set_net_name(name);
           this.open = false;
         } catch (error) {
-          console.log(error);
+          this.$toast.error(error);
         }
       };
 
       reader.onerror = () => {
-        console.log("Erro ao ler arquivo");
+        this.$toast.error("Erro ao ler arquivo");
       };
     },
 
@@ -125,7 +128,7 @@ export default {
       if (file.name.endsWith(".prisma")) {
         this.file = file;
       } else {
-        console.warn("Só é possível ler arquivos .prisma");
+        this.$toast.warning("Só é possível ler arquivos .prisma");
       }
     },
 

@@ -144,7 +144,7 @@ export default {
             this.set_paper_dimensions(data.paper_dimensions);
           }
         } catch (error) {
-          console.log(error);
+          this.$toast.error(error);
         }
       } else {
         this.open_modal = true;

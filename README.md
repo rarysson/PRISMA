@@ -12,6 +12,7 @@ Projeto desenvolvido com o intuito de fornecer mais uma opção de ferramenta pa
 * [Dexie.js](https://dexie.org/)
 * [FileSaver.js](https://github.com/eligrey/FileSaver.js)
 * [vue-drag-resize](https://github.com/kirillmurashov/vue-drag-resize)
+* [vue-toast-notification](https://github.com/ankurk91/vue-toast-notification)
 
 ## Usando o APP
 

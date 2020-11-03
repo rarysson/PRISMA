@@ -110,7 +110,7 @@ export default {
           this.done = false;
           await sleep(this.msg_delay);
         } catch (error) {
-          console.log(error);
+          this.$toast.error(error);
         }
       }
 

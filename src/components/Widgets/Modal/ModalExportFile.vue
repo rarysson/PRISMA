@@ -65,11 +65,10 @@ export default {
         );
 
         file_saver.saveAs(file);
+        this.open = false;
       } else {
-        console.warn("Não é possível exportar uma rede vazia");
+        this.$toast.warning("Não é possível exportar uma rede vazia");
       }
-
-      this.open = false;
     }
   }
 };
