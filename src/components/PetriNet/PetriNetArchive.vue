@@ -43,7 +43,9 @@ export default {
 </script>
 
 <style>
-.archive-paper :is(.marker-arrowheads, .marker-vertices, .connection-wrap) {
+.archive-paper .marker-arrowheads,
+.archive-paper .marker-vertices,
+.archive-paper .connection-wrap {
   display: none;
 }
 

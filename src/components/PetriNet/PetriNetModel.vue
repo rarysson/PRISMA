@@ -376,12 +376,19 @@ export default {
 </script>
 
 <style>
-.model-paper :is(.joint-type-pn-place, .joint-type-pn-transition) {
+.model-paper .joint-type-pn-place,
+.model-paper .joint-type-pn-transition {
   cursor: grab;
 }
 
-.model-paper.grabbing :is(.joint-type-pn-place, .joint-type-pn-transition) {
+.model-paper.grabbing .joint-type-pn-place,
+.model-paper.grabbing .joint-type-pn-transition {
   cursor: grabbing;
+}
+
+.model-paper.creating-arc .joint-type-pn-place,
+.model-paper.creating-arc .joint-type-pn-transition {
+  cursor: default;
 }
 
 .model-paper .joint-type-pn-link .connection-wrap,
@@ -389,8 +396,9 @@ export default {
   cursor: pointer;
 }
 
-.model-paper.creating-arc
-  :is(.marker-arrowheads, .marker-vertices, .connection-wrap) {
+.model-paper.creating-arc .marker-arrowheads,
+.model-paper.creating-arc .marker-vertices,
+.model-paper.creating-arc .connection-wrap {
   display: none;
 }
 </style>

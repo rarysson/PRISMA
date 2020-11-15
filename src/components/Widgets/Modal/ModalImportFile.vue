@@ -3,15 +3,15 @@
     <form @submit.prevent="submit_import">
       <label for="file">
         <div
-          class="dropzone center-center"
+          class="dropzone flex-center"
           @dragover.stop.prevent="handle_drag_event"
           @drop.stop.prevent="handle_drop_event"
         >
-          <div v-if="file === null" class="center-center">
+          <div v-if="file === null" class="flex-center">
             <i class="fa fa-cloud-upload fa-5x" aria-hidden="true"></i>
             <p>Arraste seu arquivo PRISMA aqui ou clique para procurar</p>
           </div>
-          <div v-else class="center-center">
+          <div v-else class="flex-center">
             <img
               src="@/assets/logo.svg"
               width="100"
@@ -166,8 +166,13 @@ form {
 .dropzone {
   width: 100%;
   height: 75%;
-  border: 3px dashed black;
+  border: 2px dashed black;
   cursor: pointer;
+  transition: background-color 250ms;
+}
+
+.dropzone:hover {
+  background-color: var(--light-gray);
 }
 
 .btns-container {
@@ -179,7 +184,7 @@ form {
   justify-content: space-between;
 }
 
-.center-center {
+.flex-center {
   display: flex;
   flex-direction: column;
   justify-content: center;

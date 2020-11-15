@@ -88,9 +88,13 @@ export default {
     ...mapActions(["set_net_name", "empty_net"]),
 
     submit_net_name() {
-      this.empty_net();
-      this.set_net_name(this.net_name);
-      this.open = false;
+      if (this.net_name !== null) {
+        this.empty_net();
+        this.set_net_name(this.net_name);
+        this.open = false;
+      } else {
+        this.$toast.warning("Você deve selecionar um arquivo para abrir");
+      }
     }
   }
 };

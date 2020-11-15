@@ -26,4 +26,8 @@ body {
   font-family: "Roboto", sans-serif;
   color: var(--dark);
 }
+
+button {
+  transition: all 250ms;
+}
 </style>

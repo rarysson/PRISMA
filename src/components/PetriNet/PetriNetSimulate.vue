@@ -140,40 +140,42 @@ export default {
     },
 
     async revert_net_state(data) {
-      let triggered = false;
+      if (!this.on_animation) {
+        let triggered = false;
 
-      if (data.type === "backward" && this.backwards_index >= 0) {
-        triggered = true;
-        const id = this.fired_transitions[this.backwards_index];
-        const links = this.graph.getConnectedLinks(this.graph.getCell(id));
-        const source_places = this.get_source_places(links, id);
-        const target_places = this.get_target_places(links, id);
+        if (data.type === "backward" && this.backwards_index >= 0) {
+          triggered = true;
+          const id = this.fired_transitions[this.backwards_index];
+          const links = this.graph.getConnectedLinks(this.graph.getCell(id));
+          const source_places = this.get_source_places(links, id);
+          const target_places = this.get_target_places(links, id);
 
-        await this.change_net_state(target_places, source_places, {
-          time: data.time,
-          direction: "reverse"
-        });
-        this.backwards_index--;
-      } else if (
-        data.type === "forward" &&
-        this.backwards_index < this.fired_transitions.length - 1
-      ) {
-        triggered = true;
-        this.backwards_index++;
-        const id = this.fired_transitions[this.backwards_index];
-        const links = this.graph.getConnectedLinks(this.graph.getCell(id));
-        const source_places = this.get_source_places(links, id);
-        const target_places = this.get_target_places(links, id);
+          await this.change_net_state(target_places, source_places, {
+            time: data.time,
+            direction: "reverse"
+          });
+          this.backwards_index--;
+        } else if (
+          data.type === "forward" &&
+          this.backwards_index < this.fired_transitions.length - 1
+        ) {
+          triggered = true;
+          this.backwards_index++;
+          const id = this.fired_transitions[this.backwards_index];
+          const links = this.graph.getConnectedLinks(this.graph.getCell(id));
+          const source_places = this.get_source_places(links, id);
+          const target_places = this.get_target_places(links, id);
 
-        await this.change_net_state(source_places, target_places, {
-          time: data.time
-        });
-      }
+          await this.change_net_state(source_places, target_places, {
+            time: data.time
+          });
+        }
 
-      data.steps--;
+        data.steps--;
 
-      if (data.steps > 0 && triggered) {
-        this.revert_net_state(data);
+        if (data.steps > 0 && triggered) {
+          this.revert_net_state(data);
+        }
       }
     },
 
@@ -276,7 +278,9 @@ export default {
 </script>
 
 <style>
-.simulate-paper :is(.marker-arrowheads, .marker-vertices, .connection-wrap) {
+.simulate-paper .marker-arrowheads,
+.simulate-paper .marker-vertices,
+.simulate-paper .connection-wrap {
   display: none;
 }
 

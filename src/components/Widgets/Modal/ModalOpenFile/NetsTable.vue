@@ -74,6 +74,10 @@ th {
   padding: 10px 0;
 }
 
+tbody tr {
+  transition: all 200ms;
+}
+
 tbody tr:nth-child(even) {
   background-color: var(--light);
 }
