@@ -250,13 +250,15 @@ export default {
       } else if (this.currentState.includes("token")) {
         this.change_token(id);
       } else if (this.currentState.includes("removing")) {
-        const key = `${type}s`;
-        const index = this[key].findIndex((el) => el.id === id);
-        this.arcs = this.arcs.filter(
-          (arc) => arc.source !== id && arc.target !== id
-        );
+        if (this.currentState.includes(type)) {
+          const key = `${type}s`;
+          const index = this[key].findIndex((el) => el.id === id);
+          this.arcs = this.arcs.filter(
+            (arc) => arc.source !== id && arc.target !== id
+          );
 
-        this[key].splice(index, 1);
+          this[key].splice(index, 1);
+        }
       }
     },
 
