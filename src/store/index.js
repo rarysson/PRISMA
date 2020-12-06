@@ -18,7 +18,9 @@ export default new Vuex.Store({
                 auto_save: false,
                 delay: 25
             }
-        }
+        },
+        user_logged: false,
+        user: {}
     },
 
     getters: {
@@ -28,7 +30,9 @@ export default new Vuex.Store({
         net_name: (state) => state.net_name,
         need_update_net: (state) => state.need_update_net,
         is_net_empty: (state) => state.net.cells.length === 0,
-        is_dimensions_empty: (state) => is_object_empty(state.paper_dimensions)
+        is_dimensions_empty: (state) => is_object_empty(state.paper_dimensions),
+        user_logged: (state) => state.user_logged,
+        user: (state) => state.user
     },
 
     actions: {
@@ -54,6 +58,19 @@ export default new Vuex.Store({
 
         empty_net({ commit }) {
             commit("set_net", { cells: [] });
+        },
+
+        log_in({ commit }) {
+            commit("set_user_logged", true);
+        },
+
+        log_out({ commit }) {
+            commit("set_user_logged", false);
+            commit("set_user", {});
+        },
+
+        set_user({ commit }, user) {
+            commit("set_user", user);
         }
     },
 
@@ -76,6 +93,14 @@ export default new Vuex.Store({
 
         set_save_config(state, config) {
             state.configs.save = config;
+        },
+
+        set_user_logged(state, payload) {
+            state.user_logged = payload;
+        },
+
+        set_user(state, user) {
+            state.user = user;
         }
     }
 });

@@ -1,19 +1,56 @@
 <template>
   <div class="page-container">
-    <v-tabs class="tabs" :selected="current_tab" @change="current_tab = $event">
-      <v-tab title="Arquivo">
-        <option-archive />
-      </v-tab>
-      <v-tab title="Modelar">
-        <option-model v-model="current_state" />
-      </v-tab>
-      <v-tab title="Simular">
-        <option-simulate @change="change_net_state" />
-      </v-tab>
-      <v-tab title="Configurações">
-        <option-configs />
-      </v-tab>
-    </v-tabs>
+    <header>
+      <v-tabs
+        class="tabs"
+        :selected="current_tab"
+        @change="current_tab = $event"
+      >
+        <v-tab title="Arquivo">
+          <option-archive />
+        </v-tab>
+        <v-tab title="Modelar">
+          <option-model v-model="current_state" />
+        </v-tab>
+        <v-tab title="Simular">
+          <option-simulate @change="change_net_state" />
+        </v-tab>
+        <v-tab title="Configurações">
+          <option-configs />
+        </v-tab>
+      </v-tabs>
+
+      <div class="user-container">
+        <div class="user">
+          <i class="fa fa-user-circle-o user-icon" aria-hidden="true"></i>
+          <i class="fa fa-angle-down" aria-hidden="true"></i>
+        </div>
+
+        <ul v-if="!user_logged" class="dropdown-list">
+          <li class="dropdown-list-item">
+            <router-link to="/login">
+              <button>Fazer login</button>
+            </router-link>
+          </li>
+          <li class="dropdown-list-item">
+            <router-link to="/registration">
+              <button>Cadastrar</button>
+            </router-link>
+          </li>
+        </ul>
+
+        <ul v-else class="dropdown-list">
+          <li class="dropdown-list-item">
+            <router-link to="/user">
+              <button>Editar perfil</button>
+            </router-link>
+          </li>
+          <li class="dropdown-list-item">
+            <button @click="log_out">Deslogar</button>
+          </li>
+        </ul>
+      </div>
+    </header>
 
     <component
       class="net-component"
@@ -73,7 +110,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["net_name"])
+    ...mapGetters(["net_name", "user_logged"])
   },
 
   watch: {
@@ -87,7 +124,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["set_save_config"]),
+    ...mapActions(["set_save_config", "log_out"]),
 
     get_current_component() {
       switch (this.current_tab) {
@@ -122,7 +159,14 @@ export default {
   height: 100vh;
 }
 
+header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
 .tabs {
+  width: inherit;
   position: relative;
   z-index: 99;
   background-color: whitesmoke;
@@ -130,5 +174,76 @@ export default {
 
 .net-component {
   flex: auto;
+}
+
+.user-container {
+  position: relative;
+}
+
+.user {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: 40px;
+  padding: 10px 20px 10px 0;
+}
+
+.user-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.dropdown-list {
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+  z-index: -1;
+  width: max-content;
+  padding: 15px 20px;
+  opacity: 0;
+  margin-top: 10px;
+  border: 1px solid black;
+  transform: translateY(90%);
+  background-color: white;
+}
+
+.dropdown-list::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  margin-top: -10px;
+}
+
+.user-container:hover .dropdown-list {
+  opacity: 1;
+  z-index: 999;
+}
+
+.dropdown-list-item {
+  display: block;
+  width: 100%;
+}
+
+.dropdown-list-item:not(:last-of-type) {
+  margin-bottom: 10px;
+}
+
+button {
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: 1px solid var(--dark);
+  color: var(--light);
+  background-color: var(--dark);
+}
+
+button:hover {
+  color: var(--dark);
+  background-color: var(--light);
 }
 </style>
