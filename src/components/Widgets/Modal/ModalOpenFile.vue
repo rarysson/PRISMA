@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import db from "@/util/db";
+import { mapActions, mapGetters } from "vuex";
+import api from "@/util/api";
 import Modal from "./Modal";
 import NetsTable from "./ModalOpenFile/NetsTable";
 import BtnClose from "@/components/Widgets/Btns/BtnClose";
@@ -62,16 +62,20 @@ export default {
 
   async mounted() {
     try {
-      const nets = await db.nets.toArray();
-      const data = nets.map((net) => ({
+      const response = await api.get(`/${this.user.id}/nets`);
+      const data = response.data.map((net) => ({
         name: net.name,
-        last_update: get_formatted_date(net.last_update)
+        last_update: get_formatted_date(parseInt(net.last_update))
       }));
 
       this.data = data;
     } catch (error) {
       this.$toast.error(error);
     }
+  },
+
+  computed: {
+    ...mapGetters(["user"])
   },
 
   watch: {

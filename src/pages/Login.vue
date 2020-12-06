@@ -62,6 +62,7 @@ export default {
         if (data) {
           this.log_in();
           this.set_user(data);
+          this.$toast.success("Usuário logado");
           this.$router.replace("/");
         } else {
           this.$toast.error("Credenciais incorretas");

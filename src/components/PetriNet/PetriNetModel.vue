@@ -60,7 +60,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { get_formatted_joint_type } from "@/util/funcs";
-import db from "@/util/db";
+import api from "@/util/api";
 import JointPaper from "@/components/Joint/JointPaper";
 import JointPlace from "@/components/Joint/JointPlace";
 import JointTransition from "@/components/Joint/JointTransition";
@@ -135,7 +135,10 @@ export default {
     } else {
       if (this.net_name !== null) {
         try {
-          const data = await db.nets.get(this.net_name);
+          const response = await api.get(
+            `/${this.user.id}/net/${this.net_name}`
+          );
+          const data = response.data;
 
           if (data) {
             this.graph.fromJSON(data.net);
@@ -159,7 +162,13 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["is_net_empty", "net", "net_name", "need_update_net"])
+    ...mapGetters([
+      "is_net_empty",
+      "net",
+      "net_name",
+      "need_update_net",
+      "user"
+    ])
   },
 
   watch: {

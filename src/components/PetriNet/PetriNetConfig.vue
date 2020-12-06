@@ -29,7 +29,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import db from "@/util/db";
+import api from "@/util/api";
 import BtnConfirm from "@/components/Widgets/Btns/BtnConfirm";
 
 export default {
@@ -54,7 +54,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["save_config"])
+    ...mapGetters(["save_config", "user"])
   },
 
   methods: {
@@ -66,16 +66,8 @@ export default {
       this.set_save_config(config);
 
       try {
-        const data = await db.configs.get("save");
-
-        if (data) {
-          await db.configs.update("save", config);
-        } else {
-          await db.configs.add({
-            name: "save",
-            ...config
-          });
-        }
+        await api.put(`/${this.user.id}/config`, { save: config });
+        this.$toast.success("Configurações salvas");
       } catch (error) {
         this.$toast.error(error);
       }

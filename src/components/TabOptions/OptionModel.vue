@@ -42,11 +42,12 @@
       </btn-icon>
     </fieldset>
 
-    <save-net-btn class="save-net-btn" />
+    <save-net-btn v-if="user_logged" class="save-net-btn" />
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import SaveNetBtn from "./OptionModel/SaveNetBtn";
 import BtnIcon from "@/components/Widgets/Btns/BtnIcon";
 
@@ -80,6 +81,10 @@ export default {
         removing_token: false
       }
     };
+  },
+
+  computed: {
+    ...mapGetters(["user_logged"])
   },
 
   watch: {

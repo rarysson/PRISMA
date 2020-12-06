@@ -12,8 +12,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import db from "@/util/db";
+import { mapActions, mapGetters } from "vuex";
 import Modal from "./Modal";
 import BtnConfirm from "@/components/Widgets/Btns/BtnConfirm";
 
@@ -39,6 +38,10 @@ export default {
     };
   },
 
+  computed: {
+    ...mapGetters(["user"])
+  },
+
   watch: {
     value() {
       this.open = this.value;
@@ -52,19 +55,9 @@ export default {
   methods: {
     ...mapActions(["set_net_name"]),
 
-    async submit_net_name() {
-      try {
-        const data = await db.nets.get(this.net_name);
-
-        if (!data) {
-          this.set_net_name(this.net_name);
-          this.open = false;
-        } else {
-          this.$toast.warning("O nome de rede já existe");
-        }
-      } catch (error) {
-        this.$toast.error(error);
-      }
+    submit_net_name() {
+      this.set_net_name(this.net_name);
+      this.open = false;
     }
   }
 };

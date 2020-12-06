@@ -16,7 +16,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import db from "@/util/db";
+import api from "@/util/api";
 import { sleep } from "@/util/funcs";
 import BtnIcon from "@/components/Widgets/Btns/BtnIcon";
 
@@ -74,7 +74,8 @@ export default {
       "net",
       "net_name",
       "save_config",
-      "paper_dimensions"
+      "paper_dimensions",
+      "user"
     ])
   },
 
@@ -86,22 +87,11 @@ export default {
 
       if (this.net_name !== null) {
         try {
-          const data = await db.nets.get(this.net_name);
-
-          if (data) {
-            await db.nets.update(this.net_name, {
-              last_update: Date.now(),
-              net: this.net,
-              paper_dimensions: this.paper_dimensions
-            });
-          } else {
-            await db.nets.add({
-              name: this.net_name,
-              last_update: Date.now(),
-              net: this.net,
-              paper_dimensions: this.paper_dimensions
-            });
-          }
+          await api.put(`/${this.user.id}/net/${this.net_name}`, {
+            last_update: Date.now(),
+            net: this.net,
+            paper_dimensions: this.paper_dimensions
+          });
 
           this.save_msg = "arquivo salvo!";
           this.done = true;

@@ -79,6 +79,7 @@ export default {
       } else {
         try {
           await api.post("", this.user);
+          this.$toast.success("Usuário cadastrado");
           this.$router.replace("/");
         } catch (e) {
           this.$toast.error(e.message);

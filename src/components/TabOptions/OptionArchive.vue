@@ -1,6 +1,6 @@
 <template>
   <div>
-    <btn-icon @click="set_modal('Open')">
+    <btn-icon v-if="user_logged" @click="set_modal('Open')">
       <i class="fa fa-folder-open-o fa-lg" aria-hidden="true"></i>
       Abrir arquivo
     </btn-icon>
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import ModalOpenFile from "@/components/Widgets/Modal/ModalOpenFile";
 import ModalExportFile from "@/components/Widgets/Modal/ModalExportFile";
 import ModalImportFile from "@/components/Widgets/Modal/ModalImportFile";
@@ -38,6 +39,10 @@ export default {
       open_modal: false,
       current_modal: ""
     };
+  },
+
+  computed: {
+    ...mapGetters(["user_logged"])
   },
 
   methods: {

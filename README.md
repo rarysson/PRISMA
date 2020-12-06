@@ -8,17 +8,15 @@ Projeto desenvolvido com o intuito de fornecer mais uma opção de ferramenta pa
 
 * [Vue](https://vuejs.org/)
 * [Vuex](https://vuex.vuejs.org/)
+* [Axios](https://github.com/axios/axios)
 * [JointJS](https://github.com/clientIO/joint)
-* [Dexie.js](https://dexie.org/)
 * [FileSaver.js](https://github.com/eligrey/FileSaver.js)
 * [vue-drag-resize](https://github.com/kirillmurashov/vue-drag-resize)
 * [vue-toast-notification](https://github.com/ankurk91/vue-toast-notification)
 
 ## Usando o APP
 
-Para usar online, acesse: https://prisma.rarysson.vercel.app/
-
-Para usar localmente, clone o repositório, vá na pasta criada e execute os comandos:
+Para usar localmente, primeiramente tenha uma instância do [PRISMA-Back](https://github.com/rarysson/PRISMA-Back) rodando localmente, com o back funcionando, clone o repositório, vá na pasta criada e execute os comandos:
 
 ```
 npm install

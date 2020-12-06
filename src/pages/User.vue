@@ -129,6 +129,7 @@ export default {
               email: this.user_input.email,
               id: this.user.id
             });
+            this.$toast.success("Usuário atualizado");
             this.$router.replace("/");
           }
         } else {
@@ -143,6 +144,7 @@ export default {
       try {
         await api.delete(`/${this.user.id}`);
         this.log_out();
+        this.$toast.success("Usuário excluido");
         this.$router.replace("/");
       } catch (e) {
         this.$toast.error(e.message);

@@ -15,7 +15,7 @@
         <v-tab title="Simular">
           <option-simulate @change="change_net_state" />
         </v-tab>
-        <v-tab title="Configurações">
+        <v-tab v-if="user_logged" title="Configurações">
           <option-configs />
         </v-tab>
       </v-tabs>
@@ -46,7 +46,7 @@
             </router-link>
           </li>
           <li class="dropdown-list-item">
-            <button @click="log_out">Deslogar</button>
+            <button @click="disconnect">Deslogar</button>
           </li>
         </ul>
       </div>
@@ -63,7 +63,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import db from "@/util/db";
+import api from "@/util/api";
 import VTabs from "@/components/Widgets/VTab/VTabs";
 import VTab from "@/components/Widgets/VTab/VTab";
 import OptionModel from "@/components/TabOptions/OptionModel";
@@ -99,18 +99,20 @@ export default {
     };
   },
 
-  async mounted() {
-    const data = await db.configs.get("save");
+  async beforeMount() {
+    if (this.user_logged) {
+      const response = await api.get(`/${this.user.id}/config`);
+      const data = response.data;
+      if (data) {
+        const { auto_save, delay } = data.save;
 
-    if (data) {
-      const { auto_save, delay } = data;
-
-      this.set_save_config({ auto_save, delay });
+        this.set_save_config({ auto_save, delay });
+      }
     }
   },
 
   computed: {
-    ...mapGetters(["net_name", "user_logged"])
+    ...mapGetters(["net_name", "user_logged", "user"])
   },
 
   watch: {
@@ -147,6 +149,11 @@ export default {
       } else {
         this.$refs.net.revert_net_state(data);
       }
+    },
+
+    disconnect() {
+      this.log_out();
+      this.$toast.success("Usuário deslogado");
     }
   }
 };

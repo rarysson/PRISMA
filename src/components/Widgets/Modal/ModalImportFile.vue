@@ -35,7 +35,7 @@
 
 <script>
 import { mapActions } from "vuex";
-import db from "@/util/db";
+import api from "@/util/api";
 import Modal from "./Modal";
 import BtnClose from "@/components/Widgets/Btns/BtnClose";
 import BtnConfirm from "@/components/Widgets/Btns/BtnConfirm";
@@ -89,8 +89,8 @@ export default {
 
       reader.onload = async (event) => {
         try {
-          const data = await db.nets.toArray();
-          const names = data.map((i) => i.name);
+          const response = await api.get(`/${this.user.id}/nets`);
+          const names = response.data.map((net) => net.name);
           const name = this.file.name.replace(".prisma", "");
           const obj = JSON.parse(event.target.result);
 
