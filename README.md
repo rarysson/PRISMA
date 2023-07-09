@@ -1,10 +1,8 @@
 # PRISMA - Petri Net Simulation and Modeling
 
-PRISMA é um Modelador e Simulador de Redes de Petri.
+PRISMA is a Petri Net Simulator.
 
-Projeto desenvolvido com o intuito de fornecer mais uma opção de ferramenta para modelar e simular redes de petri, pois as opções existentes são poucas.
-
-## Tecnologias utilizadas
+## Stack
 
 * [Vue](https://vuejs.org/)
 * [Vuex](https://vuex.vuejs.org/)
@@ -14,31 +12,17 @@ Projeto desenvolvido com o intuito de fornecer mais uma opção de ferramenta pa
 * [vue-drag-resize](https://github.com/kirillmurashov/vue-drag-resize)
 * [vue-toast-notification](https://github.com/ankurk91/vue-toast-notification)
 
-## Usando o APP
+## Using the APP
 
-Para usar online, acesse: https://prisma.rarysson.vercel.app/
+To use right away go here: https://prisma.rarysson.vercel.app/
 
-Para usar localmente, clone o repositório, vá na pasta criada e execute os comandos:
+To run locally, you need to clone the repo, go to the folder that you've created and type these commands:
 
 ```
 npm install
 npm run serve
 ```
 
-### Testes
+## License
 
-Para executar todos os testes execute o comando:
-
-```
-npm run test
-```
-
-Para obter a cobertura dos testes execute o comando:
-
-```
-npm run test:coverage
-```
-
-## Licença
-
-Esse projeto está sob a [licença MIT](LICENSE).
+[MIT](LICENSE).
