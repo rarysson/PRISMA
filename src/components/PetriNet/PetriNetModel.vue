@@ -218,7 +218,7 @@ export default {
     },
 
     handle_blank_click({ x, y }) {
-      // Aqui eu reduzo os valores de x e y pela metada da largura e altura de cada elemento
+      // Aqui eu reduzo os valores de x e y pela metade da largura e altura de cada elemento
       // Para dessa maneira centralizar o elemento em relação ao mouse do usuário
       // Lugar => largura: 50, Altura: 50
       // Transição => largura: 14, Altura: 50

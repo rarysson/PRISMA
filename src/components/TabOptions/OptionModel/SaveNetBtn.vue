@@ -2,7 +2,7 @@
   <div class="save-container">
     <btn-icon @click="save_net">
       <i class="fa fa-floppy-o fa-lg" aria-hidden="true"></i>
-      Salvar arquivo
+      {{ $t("SaveNet.save") }}
     </btn-icon>
     <i
       v-show="saving"
@@ -49,7 +49,7 @@ export default {
         await sleep(100);
 
         if (JSON.stringify(this.old_net) !== JSON.stringify(this.net)) {
-          this.save_msg = "salvando arquivo...";
+          this.save_msg = this.$t("SaveNet.saving");
           this.saving = true;
           await sleep(this.msg_delay);
           this.saving = false;
@@ -103,7 +103,7 @@ export default {
             });
           }
 
-          this.save_msg = "arquivo salvo!";
+          this.save_msg = this.$t("SaveNet.success");
           this.done = true;
           await sleep(this.msg_delay);
           this.save_msg = "";

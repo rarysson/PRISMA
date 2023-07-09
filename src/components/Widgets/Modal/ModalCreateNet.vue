@@ -3,10 +3,10 @@
     <form @submit.prevent="submit_net_name">
       <div class="input-container">
         <input id="net-name" v-model.trim="net_name" type="text" required />
-        <label for="net-name">Nome da rede</label>
+        <label for="net-name">{{ $t("ModalCreateNet.netName") }}</label>
       </div>
 
-      <btn-confirm>Confirmar</btn-confirm>
+      <btn-confirm>{{ $t("ModalCreateNet.confirm") }}</btn-confirm>
     </form>
   </modal>
 </template>

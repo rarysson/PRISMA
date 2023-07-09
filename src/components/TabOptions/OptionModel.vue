@@ -1,44 +1,44 @@
 <template>
   <div class="option-model-container">
     <fieldset>
-      <legend>Inserir</legend>
+      <legend>{{ $t("OptionModel.insert") }}</legend>
 
       <btn-icon @click="toggle_state('setting_place', $event)">
         <i class="fa fa-circle-thin fa-lg" aria-hidden="true"></i>
-        Lugar
+        {{ $t("OptionModel.place") }}
       </btn-icon>
       <btn-icon @click="toggle_state('setting_transition', $event)">
         <i class="fa fa-minus fa-lg fa-rotate-90" aria-hidden="true"></i>
-        Transição
+        {{ $t("OptionModel.transition") }}
       </btn-icon>
       <btn-icon @click="toggle_state('setting_arc', $event)">
         <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-        Arco
+        {{ $t("OptionModel.arch") }}
       </btn-icon>
       <btn-icon @click="toggle_state('setting_token', $event)">
         <i class="fa fa-circle" aria-hidden="true"></i>
-        Ficha
+        {{ $t("OptionModel.token") }}
       </btn-icon>
     </fieldset>
 
     <fieldset>
-      <legend>Remover</legend>
+      <legend>{{ $t("OptionModel.remove") }}</legend>
 
       <btn-icon @click="toggle_state('removing_place', $event)">
         <i class="fa fa-circle-thin fa-lg" aria-hidden="true"></i>
-        Lugar
+        {{ $t("OptionModel.place") }}
       </btn-icon>
       <btn-icon @click="toggle_state('removing_transition', $event)">
         <i class="fa fa-minus fa-lg fa-rotate-90" aria-hidden="true"></i>
-        Transição
+        {{ $t("OptionModel.transition") }}
       </btn-icon>
       <btn-icon @click="toggle_state('removing_arc', $event)">
         <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-        Arco
+        {{ $t("OptionModel.arch") }}
       </btn-icon>
       <btn-icon @click="toggle_state('removing_token', $event)">
         <i class="fa fa-circle" aria-hidden="true"></i>
-        Ficha
+        {{ $t("OptionModel.token") }}
       </btn-icon>
     </fieldset>
 

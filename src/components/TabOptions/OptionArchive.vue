@@ -2,15 +2,15 @@
   <div>
     <btn-icon @click="set_modal('Open')">
       <i class="fa fa-folder-open-o fa-lg" aria-hidden="true"></i>
-      Abrir arquivo
+      {{ $t("OptionArchive.open") }}
     </btn-icon>
     <btn-icon @click="set_modal('Export')">
       <i class="fa fa-download fa-lg" aria-hidden="true"></i>
-      Exportar arquivo
+      {{ $t("OptionArchive.export") }}
     </btn-icon>
     <btn-icon @click="set_modal('Import')">
       <i class="fa fa-upload fa-lg" aria-hidden="true"></i>
-      Importar arquivo
+      {{ $t("OptionArchive.import") }}
     </btn-icon>
 
     <component :is="current_modal" v-model="open_modal" />

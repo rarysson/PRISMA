@@ -1,17 +1,19 @@
 <template>
   <modal v-model="open">
     <form @submit.prevent="submit">
-      <label for="steps">Insira o número de passos</label>
+      <label for="steps">{{ $t("ModalSimulation.steps") }}</label>
       <br />
       <input type="number" id="steps" min="1" v-model.number="steps" required />
       <br />
 
       <input type="checkbox" id="skip" v-model="skip_animation" />
-      <label for="skip">Desativar animação durante o processo</label>
+      <label for="skip">{{ $t("ModalSimulation.skip") }}</label>
 
       <div class="btns-container">
-        <btn-close @click="close_modal">Cancelar</btn-close>
-        <btn-confirm>Confirmar</btn-confirm>
+        <btn-close @click="close_modal">{{
+          $t("ModalSimulation.cancel")
+        }}</btn-close>
+        <btn-confirm>{{ $t("ModalSimulation.confirm") }}</btn-confirm>
       </div>
     </form>
   </modal>

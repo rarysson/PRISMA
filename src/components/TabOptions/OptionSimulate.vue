@@ -2,19 +2,19 @@
   <div>
     <btn-icon @click="$emit('change', { type: 'backward', steps: 1 })">
       <i class="fa fa-angle-left fa-lg" aria-hidden="true"></i>
-      Desfazer passo
+      {{ $t("OptionSimulate.undo") }}
     </btn-icon>
     <btn-icon @click="$emit('change', { type: 'forward', steps: 1 })">
       <i class="fa fa-angle-right fa-lg" aria-hidden="true"></i>
-      Refazer passo
+      {{ $t("OptionSimulate.redo") }}
     </btn-icon>
     <btn-icon @click="set_simulation_type('backward')">
       <i class="fa fa-angle-double-left fa-lg" aria-hidden="true"></i>
-      Voltar simulação
+      {{ $t("OptionSimulate.backward") }}
     </btn-icon>
     <btn-icon @click="set_simulation_type('forward')">
       <i class="fa fa-angle-double-right fa-lg" aria-hidden="true"></i>
-      Avançar simulação
+      {{ $t("OptionSimulate.forward") }}
     </btn-icon>
 
     <modal-simulation v-model="open_modal" @change="emit_config" />

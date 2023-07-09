@@ -2,9 +2,11 @@
   <modal v-model="open">
     <div class="content-container">
       <button class="btn-export" @click="export_file">
-        Exportar como PRISMA
+        {{ $t("ModalExportFile.export") }}
       </button>
-      <btn-close class="btn-close" @click="open = false">Cancelar</btn-close>
+      <btn-close class="btn-close" @click="open = false">
+        {{ $t("ModalExportFile.cancel") }}
+      </btn-close>
     </div>
   </modal>
 </template>
@@ -67,7 +69,7 @@ export default {
         file_saver.saveAs(file);
         this.open = false;
       } else {
-        this.$toast.warning("Não é possível exportar uma rede vazia");
+        this.$toast.warning(this.$t("ModalExportFile.warning"));
       }
     }
   }

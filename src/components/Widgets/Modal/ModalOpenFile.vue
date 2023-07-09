@@ -6,8 +6,12 @@
       </div>
 
       <div class="btns-container">
-        <btn-close @click="open = false">Cancelar</btn-close>
-        <btn-confirm @click="submit_net_name">Confirmar</btn-confirm>
+        <btn-close @click="open = false">
+          {{ $t("ModalOpenFile.cancel") }}
+        </btn-close>
+        <btn-confirm @click="submit_net_name">
+          {{ $t("ModalOpenFile.confirm") }}
+        </btn-confirm>
       </div>
     </div>
   </modal>
@@ -93,7 +97,7 @@ export default {
         this.set_net_name(this.net_name);
         this.open = false;
       } else {
-        this.$toast.warning("Você deve selecionar um arquivo para abrir");
+        this.$toast.warning(this.$t("ModalOpenFile.warning"));
       }
     }
   }

@@ -9,7 +9,7 @@
         >
           <div v-if="file === null" class="flex-center">
             <i class="fa fa-cloud-upload fa-5x" aria-hidden="true"></i>
-            <p>Arraste seu arquivo PRISMA aqui ou clique para procurar</p>
+            <p>{{ $t("ModalImportFile.drop") }}</p>
           </div>
           <div v-else class="flex-center">
             <img
@@ -26,8 +26,10 @@
       <input type="file" id="file" accept=".prisma" @change="load_file" />
 
       <div class="btns-container">
-        <btn-close @click="close_modal">Cancelar</btn-close>
-        <btn-confirm>Confirmar</btn-confirm>
+        <btn-close @click="close_modal">{{
+          $t("ModalImportFile.cancel")
+        }}</btn-close>
+        <btn-confirm>{{ $t("ModalImportFile.confirm") }}</btn-confirm>
       </div>
     </form>
   </modal>
@@ -82,9 +84,7 @@ export default {
       if (this.file !== null) {
         reader.readAsText(this.file);
       } else {
-        this.$toast.warning(
-          "É necessário a transferência de um arquivo PRISMA para essa ação"
-        );
+        this.$toast.warning(this.$t("ModalImportFile.warningImport"));
       }
 
       reader.onload = async (event) => {
@@ -95,11 +95,10 @@ export default {
           const obj = JSON.parse(event.target.result);
 
           if (names.includes(name)) {
-            this.$toast.info(
-              "Caso não queira perder os dados da rede antiga, mude o nome do arquivo e importe novamente",
-              { duration: 7000 }
-            );
-            this.$toast.warning("Já existe uma Rede com esse nome", {
+            this.$toast.info(this.$t("ModalImportFile.infoImport"), {
+              duration: 7000
+            });
+            this.$toast.warning(this.$t("ModalImportFile.sameName"), {
               duration: 7000
             });
           }
@@ -114,7 +113,7 @@ export default {
       };
 
       reader.onerror = () => {
-        this.$toast.error("Erro ao ler arquivo");
+        this.$toast.error(this.$t("ModalImportFile.error"));
       };
     },
 
@@ -128,7 +127,7 @@ export default {
       if (file.name.endsWith(".prisma")) {
         this.file = file;
       } else {
-        this.$toast.warning("Só é possível ler arquivos .prisma");
+        this.$toast.warning(this.$t("ModalImportFile.warningFile"));
       }
     },
 

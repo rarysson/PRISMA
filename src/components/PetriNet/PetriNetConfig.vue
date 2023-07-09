@@ -1,14 +1,14 @@
 <template>
   <div class="config-net">
     <article>
-      <h2>Arquivos</h2>
+      <h2>{{ $t("PNConfig.title") }}</h2>
       <hr />
 
       <input type="checkbox" id="auto-save" v-model="auto_save" />
-      <label for="auto-save">Salvar automaticamente</label>
+      <label for="auto-save">{{ $t("PNConfig.autoSave") }}</label>
 
       <div v-if="auto_save" class="delay-option">
-        <label for="time">Delay do auto salvamento</label>
+        <label for="time">{{ $t("PNConfig.delay") }}</label>
         <br />
         <input
           type="number"
@@ -17,13 +17,13 @@
           max="300"
           v-model.number="delay"
         />
-        <label for="time">segundo(s)</label>
+        <label for="time">{{ $t("PNConfig.seconds") }}</label>
       </div>
     </article>
 
-    <btn-confirm class="btn-confirm" @click="change_config"
-      >Salvar mudanças</btn-confirm
-    >
+    <btn-confirm class="btn-confirm" @click="change_config">
+      {{ $t("PNConfig.save") }}
+    </btn-confirm>
   </div>
 </template>
 

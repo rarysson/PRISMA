@@ -10,7 +10,7 @@
   >
     <div class="input-container" v-if="value.name !== undefined">
       <input type="text" id="net-name" required v-model="value.name" />
-      <label for="net-name">Nome</label>
+      <label for="net-name">{{ $t("ContextMenu.name") }}</label>
     </div>
     <div class="input-container" v-if="value.tokens !== undefined">
       <input
@@ -20,7 +20,7 @@
         required
         v-model.number="value.tokens"
       />
-      <label for="tokens">Fichas</label>
+      <label for="tokens">{{ $t("ContextMenu.tokens") }}</label>
     </div>
     <div class="input-container" v-if="value.weight !== undefined">
       <input
@@ -30,12 +30,14 @@
         required
         v-model.number="value.weight"
       />
-      <label for="weight">Peso</label>
+      <label for="weight">{{ $t("ContextMenu.weight") }}</label>
     </div>
 
     <div class="btns-container">
-      <btn-close class="btn" @click="close">Cancelar</btn-close>
-      <btn-confirm class="btn">Atualizar</btn-confirm>
+      <btn-close class="btn" @click="close">{{
+        $t("ContextMenu.cancel")
+      }}</btn-close>
+      <btn-confirm class="btn">{{ $t("ContextMenu.update") }}</btn-confirm>
     </div>
   </form>
 </template>

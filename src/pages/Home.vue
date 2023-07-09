@@ -1,16 +1,16 @@
 <template>
   <div class="page-container">
     <v-tabs class="tabs" :selected="current_tab" @change="current_tab = $event">
-      <v-tab title="Arquivo">
+      <v-tab :title="$t('Home.file')">
         <option-archive />
       </v-tab>
-      <v-tab title="Modelar">
+      <v-tab :title="$t('Home.model')">
         <option-model v-model="current_state" />
       </v-tab>
-      <v-tab title="Simular">
+      <v-tab :title="$t('Home.simulate')">
         <option-simulate @change="change_net_state" />
       </v-tab>
-      <v-tab title="Configurações">
+      <v-tab :title="$t('Home.settings')">
         <option-configs />
       </v-tab>
     </v-tabs>
@@ -78,7 +78,7 @@ export default {
 
   watch: {
     net_name() {
-      this.current_tab = "Modelar";
+      this.current_tab = this.$t("Home.model");
     },
 
     current_tab() {
@@ -91,13 +91,13 @@ export default {
 
     get_current_component() {
       switch (this.current_tab) {
-        case "Arquivo":
+        case this.$t("Home.file"):
           return "PetriNetArchive";
-        case "Modelar":
+        case this.$t("Home.model"):
           return "PetriNetModel";
-        case "Simular":
+        case this.$t("Home.simulate"):
           return "PetriNetSimulate";
-        case "Configurações":
+        case this.$t("Home.settings"):
           return "PetriNetConfig";
         default:
           return "";

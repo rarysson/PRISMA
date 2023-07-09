@@ -2,8 +2,8 @@
   <table v-if="nets.length !== 0">
     <thead>
       <tr>
-        <th>Nome da rede</th>
-        <th>Última modificação</th>
+        <th>{{ $t("NetsTable.netName") }}</th>
+        <th>{{ $t("NetsTable.lastChange") }}</th>
       </tr>
     </thead>
 
@@ -21,7 +21,7 @@
     </tbody>
   </table>
   <div v-else>
-    <h1>Nenhuma rede fo criada</h1>
+    <h1>{{ $t("NetsTable.empty") }}</h1>
   </div>
 </template>
 

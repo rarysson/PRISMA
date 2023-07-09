@@ -1,8 +1,8 @@
 <template>
   <div class="page-container">
-    <h1>A página que você digitou não existe</h1>
+    <h1>{{ $t("404.title") }}</h1>
     <router-link to="/">
-      <button>Voltar para a página inicial</button>
+      <button>{{ $t("404.action") }}</button>
     </router-link>
   </div>
 </template>
